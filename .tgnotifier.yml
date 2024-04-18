@@ -1,0 +1,18 @@
+# The tgnotifier configuration file allows using the bot & chat names
+# instead of using the direct bot and chat IDs and tokens.
+
+# List of the available bots to send messages from
+# in format "botName": "<botID>:<botToken>".
+bots:
+  first_bot: "bot12345:FIRST_BOT_TOKEN"
+  second_bot: "bot54321:SECOND_BOT_TOKEN"
+
+# List of the available chats to send messages to
+# in format "chatName": chatID
+chats:
+  main_chat: -12345
+  secondary_chat: -54321
+
+# The queue adapter to use.
+# For now, only the "memory" value is available.
+queue: memory

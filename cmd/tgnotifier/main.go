@@ -74,7 +74,7 @@ func initFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("text")
 
 	cmd.Flags().StringVar(
-		&opt.Message.Text,
+		&opt.Message.ParseMode,
 		"parse-mode",
 		"",
 		"Parse mode (MarkdownV2|HTML)",

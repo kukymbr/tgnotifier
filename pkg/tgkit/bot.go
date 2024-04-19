@@ -36,8 +36,8 @@ func (t BotIdentity) String() string {
 // Examples of the identity strings:
 // - `bot12345:botToken1`
 // - `54321:botToken2`
-func NewBot(identityString string) (*Bot, error) {
-	matches := rxBotIdentity.FindAllStringSubmatch(identityString, -1)
+func NewBot(identity string) (*Bot, error) {
+	matches := rxBotIdentity.FindAllStringSubmatch(identity, -1)
 
 	if len(matches) == 0 {
 		return nil, fmt.Errorf("invalid bot identity string format")

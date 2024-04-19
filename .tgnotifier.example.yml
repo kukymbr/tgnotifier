@@ -8,11 +8,7 @@ bots:
   second_bot: "bot54321:SECOND_BOT_TOKEN"
 
 # List of the available chats to send messages to
-# in format "chatName": chatID
+# in format "chatName": "chatID" or "chatName": "@channel"
 chats:
-  main_chat: -12345
-  secondary_chat: -54321
-
-# The queue adapter to use.
-# For now, only the "memory" value is available.
-queue: memory
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"

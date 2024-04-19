@@ -10,6 +10,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	EnvDefaultBot  = "TGNOTIFIER_DEFAULT_BOT"
+	EnvDefaultChat = "TGNOTIFIER_DEFAULT_CHAT"
+)
+
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
 func NewConfig(path string, getEnv func(string) string) (*Config, error) {
@@ -102,7 +107,7 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 }
 
 func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
-	if identity := getEnv("TGNOTIFIER_DEFAULT_BOT"); identity != "" {
+	if identity := getEnv(EnvDefaultBot); identity != "" {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
 			return fmt.Errorf("read bot from TGNOTIFIER_DEFAULT_BOT: %w", err)
@@ -111,7 +116,7 @@ func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
 		conf.bots[types.DefaultBotName] = bot
 	}
 
-	if chatIDStr := getEnv("TGNOTIFIER_DEFAULT_CHAT"); chatIDStr != "" {
+	if chatIDStr := getEnv(EnvDefaultChat); chatIDStr != "" {
 		conf.chats[types.DefaultChatName] = tgkit.ChatID(chatIDStr)
 	}
 

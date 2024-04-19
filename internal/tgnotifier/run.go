@@ -19,6 +19,8 @@ func Run(ctx context.Context, opt *Options) error {
 		return err
 	}
 
+	printDebug(opt, ctn)
+
 	msg, err := ctn.Sender.Send(ctx, opt.BotName, opt.ChatName, opt.Message)
 	if err != nil {
 		return err
@@ -45,7 +47,9 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 		return nil, fmt.Errorf("arguments are invalid: %w", err)
 	}
 
-	conf, err := config.NewConfig(opt.ConfigPath, os.Getenv)
+	envGetter := os.Getenv
+
+	conf, err := config.NewConfig(opt.ConfigPath, envGetter)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +57,23 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 	client := tgkit.NewDefaultClient()
 
 	return &DependencyContainer{
-		Config: conf,
-		Client: client,
-		Sender: sender.NewSender(conf, client),
+		EnvGetter: envGetter,
+		Config:    conf,
+		Client:    client,
+		Sender:    sender.NewSender(conf, client),
 	}, nil
+}
+
+func printDebug(opt *Options, ctn *DependencyContainer) {
+	if !opt.IsDebug {
+		return
+	}
+
+	if data, err := jsoniter.Marshal(opt); err == nil {
+		fmt.Println("Options:")
+		fmt.Println(string(data))
+	}
+
+	fmt.Println(config.EnvDefaultBot + "=" + ctn.EnvGetter(config.EnvDefaultBot))
+	fmt.Println(config.EnvDefaultChat + "=" + ctn.EnvGetter(config.EnvDefaultChat))
 }

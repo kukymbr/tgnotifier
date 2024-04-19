@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
 	"github.com/kukymbr/tgnotifier/internal/util"
 	"github.com/spf13/cobra"
@@ -30,8 +31,8 @@ func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 		Short: "Tool to send telegram notifications",
 		Long: `A tool send notifications via the Telegram HTTPS API.
 Supports environment variables:
-- TGNOTIFIER_DEFAULT_BOT: bot identity used if no --bot flag is provided;
-- TGNOTIFIER_DEFAULT_CHAT: chat ID used if no --chat flag is provided. 
+- ` + config.EnvDefaultBot + `: bot identity used if no --bot flag is provided;
+- ` + config.EnvDefaultChat + `: chat ID used if no --chat flag is provided. 
 `,
 
 		SilenceErrors: true,
@@ -59,14 +60,14 @@ func initFlags(cmd *cobra.Command) {
 		&opt.BotName,
 		"bot",
 		"Bot name to send message from (defined in config); "+
-			"if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used",
+			"if not set, the bot from the "+config.EnvDefaultBot+" env var will be used",
 	)
 
 	cmd.Flags().Var(
 		&opt.ChatName,
 		"chat",
 		"Chat name to send message to (defined in config); "+
-			"if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used",
+			"if not set, the chat ID from the "+config.EnvDefaultChat+" env var will be used",
 	)
 
 	cmd.Flags().StringVar(
@@ -96,5 +97,12 @@ func initFlags(cmd *cobra.Command) {
 		"protect-content",
 		false,
 		"Protect message content from copying and forwarding",
+	)
+
+	cmd.Flags().BoolVar(
+		&opt.IsDebug,
+		"debug",
+		false,
+		"Enable the debug mode",
 	)
 }

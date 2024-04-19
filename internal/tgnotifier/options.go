@@ -28,6 +28,8 @@ type Options struct {
 	ChatName types.ChatName
 
 	Message sender.MessageOptions
+
+	IsDebug bool
 }
 
 // Normalize normalizes the values and sets the default values if missing.
@@ -46,7 +48,10 @@ func (opt *Options) Normalize() {
 		opt.ChatName = types.DefaultChatName
 	}
 
-	opt.ConfigPath = filepath.Clean(opt.ConfigPath)
+	if opt.ConfigPath != "" {
+		opt.ConfigPath = filepath.Clean(opt.ConfigPath)
+	}
+
 	opt.Message.Text = strings.TrimSpace(opt.Message.Text)
 }
 

@@ -7,7 +7,8 @@ import (
 )
 
 type DependencyContainer struct {
-	Config *config.Config
-	Client *tgkit.Client
-	Sender *sender.Sender
+	EnvGetter func(string) string
+	Config    *config.Config
+	Client    *tgkit.Client
+	Sender    *sender.Sender
 }

@@ -5,9 +5,9 @@ import (
 	"io"
 	"os"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
+	"gopkg.in/yaml.v3"
 )
 
 // NewConfigFromFile reads Config from the file.
@@ -33,7 +33,7 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 
 	var raw *config
 
-	if err := jsoniter.Unmarshal(data, &raw); err != nil {
+	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return nil, fmt.Errorf("decode config data: %w", err)
 	}
 

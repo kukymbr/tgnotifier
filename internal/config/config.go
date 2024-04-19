@@ -19,7 +19,7 @@ const (
 // and from the env if values are presented.
 func NewConfig(path string, getEnv func(string) string) (*Config, error) {
 	var (
-		conf *Config
+		conf = &Config{}
 		err  error
 	)
 
@@ -80,10 +80,8 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("invalid config: no chats given")
 	}
 
-	conf := &Config{
-		bots:  make(map[types.BotName]*tgkit.Bot),
-		chats: make(map[types.ChatName]tgkit.ChatID),
-	}
+	conf := &Config{}
+	conf.init()
 
 	for botName, identity := range raw.Bots {
 		bot, err := tgkit.NewBot(identity)
@@ -107,6 +105,8 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 }
 
 func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
+	conf.init()
+
 	if identity := getEnv(EnvDefaultBot); identity != "" {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
@@ -137,6 +137,16 @@ func (c *Config) Bots() BotsIndex {
 // Chats returns registered chats index.
 func (c *Config) Chats() ChatsIndex {
 	return c.chats
+}
+
+func (c *Config) init() {
+	if c.bots == nil {
+		c.bots = make(BotsIndex)
+	}
+
+	if c.chats == nil {
+		c.chats = make(ChatsIndex)
+	}
 }
 
 // BotsIndex is an index of the registered bots.

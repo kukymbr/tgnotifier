@@ -11,7 +11,7 @@ via the Telegram API.
 For now, only the `go install` is supported to install the `tgnotifier`:
 
 ```shell
-go install github.com/kukymbr/tgnotifier@latest
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@latest
 ```
 
 ## CLI tool usage

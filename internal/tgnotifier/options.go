@@ -2,6 +2,7 @@ package tgnotifier
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -15,7 +16,6 @@ const DefaultConfigPath = ".tgnotifier.yml"
 // NewOptions creates new Options with default values.
 func NewOptions() *Options {
 	opt := &Options{}
-	opt.Normalize()
 
 	return opt
 }
@@ -33,7 +33,17 @@ type Options struct {
 // Normalize normalizes the values and sets the default values if missing.
 func (opt *Options) Normalize() {
 	if opt.ConfigPath == "" {
-		opt.ConfigPath = DefaultConfigPath
+		if _, err := os.Stat(DefaultConfigPath); err == nil {
+			opt.ConfigPath = DefaultConfigPath
+		}
+	}
+
+	if opt.BotName == "" {
+		opt.BotName = types.DefaultBotName
+	}
+
+	if opt.ChatName == "" {
+		opt.ChatName = types.DefaultChatName
 	}
 
 	opt.ConfigPath = filepath.Clean(opt.ConfigPath)

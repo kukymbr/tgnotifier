@@ -3,6 +3,7 @@ package tgnotifier
 import (
 	"context"
 	"fmt"
+	"os"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/kukymbr/tgnotifier/internal/config"
@@ -44,7 +45,7 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 		return nil, fmt.Errorf("arguments are invalid: %w", err)
 	}
 
-	conf, err := config.NewConfigFromFile(opt.ConfigPath)
+	conf, err := config.NewConfig(opt.ConfigPath, os.Getenv)
 	if err != nil {
 		return nil, err
 	}

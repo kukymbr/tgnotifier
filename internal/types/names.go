@@ -1,5 +1,10 @@
 package types
 
+const (
+	DefaultBotName  BotName  = "__default__"
+	DefaultChatName ChatName = "__default__"
+)
+
 // BotName is a given bot name from the configs.
 type BotName string
 

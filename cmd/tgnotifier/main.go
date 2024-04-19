@@ -28,7 +28,11 @@ func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tgnotifier",
 		Short: "Tool to send telegram notifications",
-		Long:  "A tool send notifications via the Telegram HTTPS API.",
+		Long: `A tool send notifications via the Telegram HTTPS API.
+Supports environment variables:
+- TGNOTIFIER_DEFAULT_BOT: bot identity used if no --bot flag is provided;
+- TGNOTIFIER_DEFAULT_CHAT: chat ID used if no --chat flag is provided. 
+`,
 
 		SilenceErrors: true,
 		SilenceUsage:  true,
@@ -47,23 +51,23 @@ func initFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVar(
 		&opt.ConfigPath,
 		"config",
-		tgnotifier.DefaultConfigPath,
+		"",
 		"Path to a config file",
 	)
 
 	cmd.Flags().Var(
 		&opt.BotName,
 		"bot",
-		"Bot name to send message from (defined in config)",
+		"Bot name to send message from (defined in config); "+
+			"if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used",
 	)
-	_ = cmd.MarkFlagRequired("bot")
 
 	cmd.Flags().Var(
 		&opt.ChatName,
 		"chat",
-		"Chat name to send message to (defined in config)",
+		"Chat name to send message to (defined in config); "+
+			"if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used",
 	)
-	_ = cmd.MarkFlagRequired("chat")
 
 	cmd.Flags().StringVar(
 		&opt.Message.Text,

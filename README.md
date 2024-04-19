@@ -16,21 +16,18 @@ go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@latest
 
 ## CLI tool usage
 
-To run the `tgnotifier`, the configuration file is required.
-See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available values.
-
-1. Create the configuration file, by default it is `.tgnotifier.yml`.
-2. Produce the bot credentials and the chat IDs into the config file.
-3. Run the `tgnotifier`.
-
 ```text
+Supports environment variables:
+- TGNOTIFIER_DEFAULT_BOT: bot identity used if no --bot flag is provided;
+- TGNOTIFIER_DEFAULT_CHAT: chat ID used if no --chat flag is provided.
+
 Usage:
   tgnotifier [flags]
 
 Flags:
-      --bot bot name           Bot name to send message from (defined in config)
-      --chat chat name         Chat name to send message to (defined in config)
-      --config string          Path to a config file (default ".tgnotifier.yml")
+      --bot bot name           Bot name to send message from (defined in config); if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
+      --chat chat name         Chat name to send message to (defined in config); if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
+      --config string          Path to a config file
       --disable-notification   Disable message sound notification
   -h, --help                   help for tgnotifier
       --parse-mode string      Parse mode (MarkdownV2|HTML)
@@ -38,7 +35,28 @@ Flags:
       --text string            Message text
 ```
 
+### Configuration
+
+The `tgnotifier` could have a configuration file to use multiple bots and chats.
+See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available values.
+
+To run `tgnotifier` without the config file, define the env vars with default bot credentials and chat ID:
+
+```shell
+export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
+export TGNOTIFIER_DEFAULT_CHAT="-12345"
+```
+
 ### Command execution examples
+
+Send a "Hello, World!" message from the default bot to the default chat:
+
+```shell
+export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
+export TGNOTIFIER_DEFAULT_CHAT="-12345"
+
+tgnotifier --text="Hello, World!"
+```
 
 Send a "Hello, World!" message from the `first_bot` to the `main_chat`:
 

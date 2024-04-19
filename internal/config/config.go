@@ -61,7 +61,7 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 
 	for chatName, chatIDStr := range raw.Chats {
 		chatID := tgkit.ChatID(chatIDStr)
-		if chatID != "" {
+		if chatID == "" {
 			return nil, fmt.Errorf("empty chat ID for %s in config", chatName)
 		}
 

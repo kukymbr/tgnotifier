@@ -59,7 +59,7 @@ func initFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("bot")
 
 	cmd.Flags().Var(
-		&opt.BotName,
+		&opt.ChatName,
 		"chat",
 		"Chat name to send message to (defined in config)",
 	)

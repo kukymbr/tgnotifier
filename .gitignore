@@ -4,3 +4,7 @@
 
 # Executables
 /tgnotifier
+
+# Test generated files
+coverage_out
+coverage.html

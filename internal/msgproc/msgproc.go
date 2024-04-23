@@ -34,7 +34,7 @@ func (mp *MessageProcessor) tagUsers(msg string, parseMode types.ParseMode) stri
 
 	for name, id := range mp.users {
 		find := "@" + name.String()
-		repl := find
+		repl := ""
 
 		switch parseMode {
 		case types.ParseModeHTML:

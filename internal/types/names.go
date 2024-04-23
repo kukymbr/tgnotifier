@@ -38,3 +38,20 @@ func (n *ChatName) Set(val string) error {
 func (n *ChatName) Type() string {
 	return "chat name"
 }
+
+// UserName is a user's name from the configs.
+type UserName string
+
+func (n *UserName) String() string {
+	return string(*n)
+}
+
+func (n *UserName) Set(val string) error {
+	*n = UserName(val)
+
+	return nil
+}
+
+func (n *UserName) Type() string {
+	return "user name"
+}

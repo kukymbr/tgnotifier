@@ -12,3 +12,8 @@ bots:
 chats:
   main_chat: "-12345"
   secondary_chat: "@my_test_channel"
+
+# List of the users in the format "name: id" to mention people using the `@name` form.
+# Names must contain only latin letters, numbers and underscores.
+users:
+  kukymbr: 191603225

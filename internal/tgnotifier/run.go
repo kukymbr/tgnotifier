@@ -7,6 +7,7 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/kukymbr/tgnotifier/internal/config"
+	"github.com/kukymbr/tgnotifier/internal/msgproc"
 	"github.com/kukymbr/tgnotifier/internal/sender"
 	"github.com/kukymbr/tgnotifier/internal/util"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
@@ -55,12 +56,14 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 	}
 
 	client := tgkit.NewDefaultClient()
+	proc := msgproc.NewMessageProcessor(conf.Users())
 
 	return &DependencyContainer{
 		EnvGetter: envGetter,
 		Config:    conf,
 		Client:    client,
-		Sender:    sender.NewSender(conf, client),
+		Sender:    sender.NewSender(conf, client, proc),
+		Processor: proc,
 	}, nil
 }
 

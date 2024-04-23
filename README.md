@@ -76,6 +76,10 @@ Send a "Hello, World!" message from the `another_bot` to the `another_chat` usin
 tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=another_chat --text="Hello, World!" 
 ```
 
+## TODO
+
+- [ ] Add users IDs to the config file to mention people in messages in format `@username`.
+
 ## License
 
 [MIT licensed](LICENSE).

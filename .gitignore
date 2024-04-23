@@ -1,3 +1,6 @@
+# Local configs
 /.tgnotifier.yml
 /.test.tgnotifier.yml
+
+# Executables
 /tgnotifier

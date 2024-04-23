@@ -19,7 +19,7 @@ func (n *BotName) Set(val string) error {
 }
 
 func (n *BotName) Type() string {
-	return "bot name"
+	return "string"
 }
 
 // ChatName is a given chat name from the configs.
@@ -36,7 +36,7 @@ func (n *ChatName) Set(val string) error {
 }
 
 func (n *ChatName) Type() string {
-	return "chat name"
+	return "string"
 }
 
 // UserName is a user's name from the configs.
@@ -53,5 +53,5 @@ func (n *UserName) Set(val string) error {
 }
 
 func (n *UserName) Type() string {
-	return "user name"
+	return "string"
 }

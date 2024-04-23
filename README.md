@@ -25,20 +25,44 @@ Usage:
   tgnotifier [flags]
 
 Flags:
-      --bot bot name           Bot name to send message from (defined in config); if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
-      --chat chat name         Chat name to send message to (defined in config); if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
-      --config string          Path to a config file
-      --disable-notification   Disable message sound notification
-  -h, --help                   help for tgnotifier
-      --parse-mode string      Parse mode (MarkdownV2|HTML)
-      --protect-content        Protect message content from copying and forwarding
-      --text string            Message text
+      --bot string                      Bot name to send message from (defined in config); if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
+      --chat string                     Chat name to send message to (defined in config); if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
+      --config string                   Path to a config file
+      --debug                           Enable the debug mode
+      --disable-notification            Disable message sound notification
+  -h, --help                            help for tgnotifier
+      --parse-mode message parse mode   Parse mode (MarkdownV2|HTML)
+      --protect-content                 Protect message content from copying and forwarding
+      --text string                     Message text
 ```
 
 ### Configuration
 
 The `tgnotifier` could have a configuration file to use multiple bots and chats.
 See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available values.
+
+Defining the bots, who can send messages via the `tgnotifier`:
+
+```yaml
+bots:
+  first_bot: "12345:FIRST_BOT_TOKEN"
+  second_bot: "bot54321:SECOND_BOT_TOKEN"
+```
+
+Defining the chat IDs, where `tgnotifier` can send messages to:
+
+```yaml
+chats:
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"
+```
+
+Defining the usernames to mention them in the messages:
+
+```yaml
+users:
+  JohnDoe: 12345
+```
 
 To run `tgnotifier` without the config file, define the env vars with default bot credentials and chat ID:
 
@@ -58,10 +82,10 @@ export TGNOTIFIER_DEFAULT_CHAT="-12345"
 tgnotifier --text="Hello, World!"
 ```
 
-Send a "Hello, World!" message from the `first_bot` to the `main_chat`:
+Send a "Hello, World!" message from the `first_bot` to the `main_chat`, mentioning the `JohnDoe` user:
 
 ```shell
-tgnotifier --bot=first_bot --chat=main_chat --text="Hello, World!" 
+tgnotifier --bot=first_bot --chat=main_chat --text="Hello, World and @JohnDoe!"
 ```
 
 Send a "Hello, World!" message from the `second_bot` to the `main_chat` with no sound notification:

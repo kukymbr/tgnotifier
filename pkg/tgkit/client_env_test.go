@@ -33,7 +33,7 @@ func requireChatID(t *testing.T) tgkit.ChatID {
 	return tgkit.ChatID(id)
 }
 
-func TestClient_GetMe(t *testing.T) {
+func TestClient_GetMe_Env(t *testing.T) {
 	bot := requireBot(t)
 
 	client := tgkit.NewDefaultClient()
@@ -46,7 +46,7 @@ func TestClient_GetMe(t *testing.T) {
 	assert.True(t, resp.IsBot)
 }
 
-func TestClient_SendMessage(t *testing.T) {
+func TestClient_SendMessage_Env(t *testing.T) {
 	bot := requireBot(t)
 	chatID := requireChatID(t)
 

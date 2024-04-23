@@ -1,0 +1,19 @@
+# The tgnotifier configuration file allows using the bot & chat names
+# instead of using the direct bot and chat IDs and tokens.
+
+# List of the available bots to send messages from
+# in format "botName": "<botID>:<botToken>".
+bots:
+  first_bot: "12345:FIRST_BOT_TOKEN"
+  second_bot: "bot54321:SECOND_BOT_TOKEN"
+
+# List of the available chats to send messages to
+# in format "chatName": "chatID" or "chatName": "@channel"
+chats:
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"
+
+# List of the users in the format "name: id" to mention people using the `@name` form.
+# Names must contain only latin letters, numbers and underscores.
+users:
+  JohnDoe: 12345

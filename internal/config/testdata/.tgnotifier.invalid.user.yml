@@ -1,0 +1,8 @@
+bots:
+  first_bot: "1:test"
+
+users:
+  invalid user name: 123
+
+chats:
+  main_chat: "1"

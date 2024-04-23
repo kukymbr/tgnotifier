@@ -75,7 +75,7 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("decode config data: %w", err)
 	}
 
-	if len(raw.Bots) == 0 {
+	if raw == nil || len(raw.Bots) == 0 {
 		return nil, fmt.Errorf("invalid config: no bots given")
 	}
 

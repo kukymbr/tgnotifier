@@ -16,7 +16,7 @@ const (
 	tgMethodSendMessage = "sendMessage"
 )
 
-// NewDefaultClient creates new default telegram Client instance.
+// NewDefaultClient creates a new default telegram Client instance.
 func NewDefaultClient() *Client {
 	return NewClient(&http.Client{
 		Timeout: 30 * time.Second,
@@ -24,13 +24,13 @@ func NewDefaultClient() *Client {
 }
 
 // NewClient creates a new telegram Client instance.
-func NewClient(httpClient *http.Client) *Client {
+func NewClient(httpClient HTTPClient) *Client {
 	return &Client{httpClient: httpClient}
 }
 
 // Client is a tool to communicate with a Telegram API via the HTTPS.
 type Client struct {
-	httpClient *http.Client
+	httpClient HTTPClient
 }
 
 // Get sends a GET request to the Telegram API.

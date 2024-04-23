@@ -1,0 +1,5 @@
+bots:
+  first_bot: "invalid bot identity"
+
+chats:
+  main_chat: ""

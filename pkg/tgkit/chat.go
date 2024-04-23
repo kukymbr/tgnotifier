@@ -11,6 +11,10 @@ type ChatID string
 func (id ChatID) String() string {
 	str := string(id)
 
+	if str == "" {
+		return ""
+	}
+
 	if _, err := strconv.ParseInt(string(id), 10, 64); err == nil {
 		return str
 	}

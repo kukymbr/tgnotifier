@@ -103,6 +103,7 @@ tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=anot
 ## TODO
 
 - [x] Add users' IDs to the config file to mention people in messages in format `@username`.
+- [ ] Define default bot & chat in config file.
 
 ## License
 

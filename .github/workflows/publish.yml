@@ -11,5 +11,5 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Ping endpoint
+      - name: Ping Golang proxy
         run: curl "https://proxy.golang.org/github.com/kukymbr/tgnotifier/@v/$(git describe HEAD --tags --abbrev=0).info"

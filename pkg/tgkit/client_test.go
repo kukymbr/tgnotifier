@@ -71,13 +71,11 @@ func TestClient_GetMe(t *testing.T) {
 
 	tests := []struct {
 		BotIdentity string
-		Assert      func(t *testing.T, bot *tgkit.Bot, client *tgkit.Client)
+		Assert      func(t *testing.T, user *tgkit.TgUser, err error)
 	}{
 		{
 			BotIdentity: "1:test1",
-			Assert: func(t *testing.T, bot *tgkit.Bot, client *tgkit.Client) {
-				user, err := client.GetMe(bot)
-
+			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
 				require.NoError(t, err)
 				require.NotNil(t, user)
 
@@ -87,9 +85,7 @@ func TestClient_GetMe(t *testing.T) {
 		},
 		{
 			BotIdentity: "2:test2",
-			Assert: func(t *testing.T, bot *tgkit.Bot, client *tgkit.Client) {
-				user, err := client.GetMe(bot)
-
+			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
 				require.NoError(t, err)
 				require.NotNil(t, user)
 
@@ -99,9 +95,7 @@ func TestClient_GetMe(t *testing.T) {
 		},
 		{
 			BotIdentity: "3:test3",
-			Assert: func(t *testing.T, bot *tgkit.Bot, client *tgkit.Client) {
-				user, err := client.GetMe(bot)
-
+			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
 				assert.Error(t, err)
 				assert.Nil(t, user)
 			},
@@ -115,7 +109,77 @@ func TestClient_GetMe(t *testing.T) {
 
 			require.NoError(t, err)
 
-			test.Assert(t, bot, client)
+			user, err := client.GetMe(bot)
+
+			test.Assert(t, user, err)
+		})
+	}
+}
+
+func TestClient_SendMessage(t *testing.T) {
+	httpClient := &tgkit.HTTPClientJSONMock{}
+	httpClient.RegisterResponse(
+		http.MethodPost,
+		"https://api.telegram.org/bot1:test1/sendMessage",
+		http.StatusOK,
+		&tgkit.TgMessageResponse{
+			Ok: true,
+			Result: tgkit.TgMessage{
+				MessageID: 1,
+			},
+		},
+	)
+	httpClient.RegisterResponse(
+		http.MethodPost,
+		"https://api.telegram.org/bot2:test2/sendMessage",
+		http.StatusNotFound,
+		&tgkit.TgErrorResponse{
+			Ok:          false,
+			ErrorCode:   http.StatusNotFound,
+			Description: "Not found",
+		},
+	)
+
+	tests := []struct {
+		BotIdentity string
+		ChatID      string
+		Text        string
+		Assert      func(t *testing.T, msg *tgkit.TgMessage, err error)
+	}{
+		{
+			BotIdentity: "1:test1",
+			ChatID:      "1",
+			Text:        "Test 1",
+			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+				assert.NoError(t, err)
+				assert.NotNil(t, msg)
+				assert.Equal(t, 1, msg.MessageID)
+			},
+		},
+		{
+			BotIdentity: "2:test2",
+			ChatID:      "1",
+			Text:        "Test 2",
+			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+				assert.Error(t, err)
+				assert.Nil(t, msg)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.BotIdentity, func(t *testing.T) {
+			client := tgkit.NewClient(httpClient)
+			bot, err := tgkit.NewBot(test.BotIdentity)
+
+			require.NoError(t, err)
+
+			msg, err := client.SendMessage(bot, tgkit.TgMessageRequest{
+				ChatID: tgkit.ChatID(test.ChatID),
+				Text:   test.Text,
+			})
+
+			test.Assert(t, msg, err)
 		})
 	}
 }

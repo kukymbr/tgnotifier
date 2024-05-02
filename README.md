@@ -1,3 +1,5 @@
+<img align="right" width="125" src="assets/tgnotifier.svg" alt="image with a gopher on a telegram plane">
+
 # tgnotifier
 
 [![License](https://img.shields.io/github/license/kukymbr/tgnotifier.svg)](https://github.com/kukymbr/tgnotifier/blob/main/LICENSE)

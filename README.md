@@ -1,4 +1,4 @@
-<img align="right" width="125" src="assets/tgnotifier.svg" alt="image with a gopher on a telegram plane">
+<img align="right" width="125" src="assets/tgnotifier.png" alt="image with a gopher on a telegram plane">
 
 # tgnotifier
 

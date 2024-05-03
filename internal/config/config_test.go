@@ -66,6 +66,9 @@ func TestNewConfig(t *testing.T) {
 				assert.Len(t, conf.Chats(), 1)
 				assert.Len(t, conf.Users(), 0)
 
+				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
+				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
+
 				assertBot(t, conf, types.DefaultBotName, "bot2:test2")
 				assertChat(t, conf, types.DefaultChatName, "@testChat2")
 			},
@@ -80,6 +83,9 @@ func TestNewConfig(t *testing.T) {
 				assert.Len(t, conf.Bots(), 2)
 				assert.Len(t, conf.Chats(), 2)
 				assert.Len(t, conf.Users(), 1)
+
+				assert.Equal(t, types.BotName("first_bot"), conf.GetDefaultBotName())
+				assert.Equal(t, types.ChatName("main_chat"), conf.GetDefaultChatName())
 
 				assertBot(t, conf, "first_bot", "bot12345:FIRST_BOT_TOKEN")
 				assertBot(t, conf, "second_bot", "bot54321:SECOND_BOT_TOKEN")
@@ -102,6 +108,9 @@ func TestNewConfig(t *testing.T) {
 				assert.Len(t, conf.Bots(), 3)
 				assert.Len(t, conf.Chats(), 3)
 				assert.Len(t, conf.Users(), 1)
+
+				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
+				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
 
 				assertBot(t, conf, types.DefaultBotName, "bot3:test3")
 				assertBot(t, conf, "first_bot", "bot12345:FIRST_BOT_TOKEN")

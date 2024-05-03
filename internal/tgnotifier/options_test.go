@@ -5,7 +5,6 @@ import (
 
 	"github.com/kukymbr/tgnotifier/internal/sender"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
-	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,8 +26,6 @@ func TestOptions(t *testing.T) {
 			},
 			Normalized: tgnotifier.Options{
 				ConfigPath: tgnotifier.DefaultConfigPath,
-				BotName:    types.DefaultBotName,
-				ChatName:   types.DefaultChatName,
 				Message: sender.MessageOptions{
 					Text: "test1",
 				},

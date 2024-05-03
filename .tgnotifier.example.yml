@@ -13,6 +13,16 @@ chats:
   main_chat: "-12345"
   secondary_chat: "@my_test_channel"
 
+# Default bot is a bot name to use if no bot name is defined in CLI arguments.
+# The `TGNOTIFIER_DEFAULT_BOT` environment variable overrides this value if defined.
+# Bot with this name must be defined in the `bots` config section.
+default_bot: "first_bot"
+
+# Default chat is a chat name to use if no chat name is defined in CLI arguments.
+# The `TGNOTIFIER_DEFAULT_CHAT` environment variable overrides this value if defined.
+# Chat with this name must be defined in the `chats` config section.
+default_chat: "main_chat"
+
 # List of the users in the format "name: id" to mention people using the `@name` form.
 # Names must contain only latin letters, numbers and underscores.
 users:

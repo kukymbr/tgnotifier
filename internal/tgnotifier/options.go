@@ -40,14 +40,6 @@ func (opt *Options) Normalize() {
 		}
 	}
 
-	if opt.BotName == "" {
-		opt.BotName = types.DefaultBotName
-	}
-
-	if opt.ChatName == "" {
-		opt.ChatName = types.DefaultChatName
-	}
-
 	if opt.ConfigPath != "" {
 		opt.ConfigPath = filepath.Clean(opt.ConfigPath)
 	}

@@ -104,6 +104,9 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		conf.chats[chatName] = chatID
 	}
 
+	conf.defaultBotName = raw.DefaultBot
+	conf.defaultChatName = raw.DefaultChat
+
 	conf.users = make(UsersIndex)
 
 	for name, id := range raw.Users {
@@ -123,14 +126,16 @@ func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
 	if identity := getEnv(EnvDefaultBot); identity != "" {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
-			return fmt.Errorf("read bot from TGNOTIFIER_DEFAULT_BOT: %w", err)
+			return fmt.Errorf("read bot from %s: %w", EnvDefaultBot, err)
 		}
 
 		conf.bots[types.DefaultBotName] = bot
+		conf.defaultBotName = types.DefaultBotName
 	}
 
 	if chatIDStr := getEnv(EnvDefaultChat); chatIDStr != "" {
 		conf.chats[types.DefaultChatName] = tgkit.ChatID(chatIDStr)
+		conf.defaultChatName = types.DefaultChatName
 	}
 
 	return nil
@@ -141,6 +146,9 @@ type Config struct {
 	bots  BotsIndex
 	chats ChatsIndex
 	users UsersIndex
+
+	defaultBotName  types.BotName
+	defaultChatName types.ChatName
 }
 
 // Bots - returns registered bots index.
@@ -156,6 +164,16 @@ func (c *Config) Chats() ChatsIndex {
 // Users returns registered users index.
 func (c *Config) Users() UsersIndex {
 	return c.users
+}
+
+// GetDefaultBotName returns a default bot name if no bot name defined in arguments.
+func (c *Config) GetDefaultBotName() types.BotName {
+	return c.defaultBotName
+}
+
+// GetDefaultChatName returns a default chat name if no chat name defined in arguments.
+func (c *Config) GetDefaultChatName() types.ChatName {
+	return c.defaultChatName
 }
 
 func (c *Config) init() {
@@ -202,7 +220,10 @@ func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
 type UsersIndex map[types.UserName]int
 
 type config struct {
-	Bots  map[types.BotName]string  `json:"bots"`
-	Chats map[types.ChatName]string `json:"chats"`
-	Users UsersIndex                `json:"users"`
+	Bots  map[types.BotName]string  `json:"bots" yaml:"bots"`
+	Chats map[types.ChatName]string `json:"chats" yaml:"chats"`
+	Users UsersIndex                `json:"users" yaml:"users"`
+
+	DefaultBot  types.BotName  `json:"default_bot" yaml:"default_bot"`
+	DefaultChat types.ChatName `json:"default_chat" yaml:"default_chat"`
 }

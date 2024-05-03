@@ -55,6 +55,14 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 		return nil, err
 	}
 
+	if opt.BotName == "" {
+		opt.BotName = conf.GetDefaultBotName()
+	}
+
+	if opt.ChatName == "" {
+		opt.ChatName = conf.GetDefaultChatName()
+	}
+
 	client := tgkit.NewDefaultClient()
 	proc := msgproc.NewMessageProcessor(conf.Users())
 

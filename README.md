@@ -59,14 +59,16 @@ chats:
   secondary_chat: "@my_test_channel"
 ```
 
-Defining the usernames to mention them in the messages:
+To use a program without a `bot` or a `chat` argument, 
+define a `default_bot` and  `default_chat` values in the config file:
 
 ```yaml
-users:
-  JohnDoe: 12345
+default_bot: "first_bot"
+default_chat: "main_chat"
 ```
 
-To run `tgnotifier` without the config file, define the env vars with default bot credentials and chat ID:
+To run `tgnotifier` without the config file at all, 
+define the env vars with default bot credentials and chat ID:
 
 ```shell
 export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
@@ -104,8 +106,7 @@ tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=anot
 
 ## TODO
 
-- [x] Add users' IDs to the config file to mention people in messages in format `@username`.
-- [ ] Define default bot & chat in config file.
+- [x] Define default bot & chat in config file.
 - [ ] Docker configuration.
 
 ## License

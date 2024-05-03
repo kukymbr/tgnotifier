@@ -64,7 +64,7 @@ func getCtn(opt *Options) (*DependencyContainer, error) {
 	}
 
 	client := tgkit.NewDefaultClient()
-	proc := msgproc.NewMessageProcessor(conf.Users())
+	proc := msgproc.NewMessageProcessor()
 
 	return &DependencyContainer{
 		EnvGetter: envGetter,

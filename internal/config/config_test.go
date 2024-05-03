@@ -64,7 +64,6 @@ func TestNewConfig(t *testing.T) {
 
 				assert.Len(t, conf.Bots(), 1)
 				assert.Len(t, conf.Chats(), 1)
-				assert.Len(t, conf.Users(), 0)
 
 				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
 				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
@@ -82,7 +81,6 @@ func TestNewConfig(t *testing.T) {
 
 				assert.Len(t, conf.Bots(), 2)
 				assert.Len(t, conf.Chats(), 2)
-				assert.Len(t, conf.Users(), 1)
 
 				assert.Equal(t, types.BotName("first_bot"), conf.GetDefaultBotName())
 				assert.Equal(t, types.ChatName("main_chat"), conf.GetDefaultChatName())
@@ -107,7 +105,6 @@ func TestNewConfig(t *testing.T) {
 
 				assert.Len(t, conf.Bots(), 3)
 				assert.Len(t, conf.Chats(), 3)
-				assert.Len(t, conf.Users(), 1)
 
 				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
 				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
@@ -148,14 +145,6 @@ func TestNewConfig(t *testing.T) {
 		{
 			Name:       "With invalid file (chat)",
 			ConfigFile: "./testdata/.tgnotifier.invalid.chat.yml",
-			Assert: func(t *testing.T, conf *config.Config, err error) {
-				assert.Error(t, err)
-				assert.Nil(t, conf)
-			},
-		},
-		{
-			Name:       "With invalid file (user)",
-			ConfigFile: "./testdata/.tgnotifier.invalid.user.yml",
 			Assert: func(t *testing.T, conf *config.Config, err error) {
 				assert.Error(t, err)
 				assert.Nil(t, conf)

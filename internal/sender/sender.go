@@ -46,7 +46,7 @@ func (s *Sender) Send(
 		return nil, err
 	}
 
-	msg.Text = s.msgProc.Process(msg.Text, msg.ParseMode)
+	msg.Text = s.msgProc.Process(msg.Text)
 
 	return s.client.SendMessage(bot, tgkit.TgMessageRequest{
 		ChatID:              chatID,

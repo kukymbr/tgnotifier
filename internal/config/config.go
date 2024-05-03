@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"regexp"
 
 	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
@@ -15,8 +14,6 @@ const (
 	EnvDefaultBot  = "TGNOTIFIER_DEFAULT_BOT"
 	EnvDefaultChat = "TGNOTIFIER_DEFAULT_CHAT"
 )
-
-var rxUsername = regexp.MustCompile(`^([a-zA-Z0-9_])+$`)
 
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
@@ -107,16 +104,6 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 	conf.defaultBotName = raw.DefaultBot
 	conf.defaultChatName = raw.DefaultChat
 
-	conf.users = make(UsersIndex)
-
-	for name, id := range raw.Users {
-		if !rxUsername.MatchString(name.String()) {
-			return nil, fmt.Errorf("cannot use '%s' value as an username: invalid format", name.String())
-		}
-
-		conf.users[name] = id
-	}
-
 	return conf, nil
 }
 
@@ -145,7 +132,6 @@ func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
 type Config struct {
 	bots  BotsIndex
 	chats ChatsIndex
-	users UsersIndex
 
 	defaultBotName  types.BotName
 	defaultChatName types.ChatName
@@ -159,11 +145,6 @@ func (c *Config) Bots() BotsIndex {
 // Chats returns registered chats index.
 func (c *Config) Chats() ChatsIndex {
 	return c.chats
-}
-
-// Users returns registered users index.
-func (c *Config) Users() UsersIndex {
-	return c.users
 }
 
 // GetDefaultBotName returns a default bot name if no bot name defined in arguments.
@@ -183,10 +164,6 @@ func (c *Config) init() {
 
 	if c.chats == nil {
 		c.chats = make(ChatsIndex)
-	}
-
-	if c.users == nil {
-		c.users = make(UsersIndex)
 	}
 }
 
@@ -216,13 +193,9 @@ func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
 	return chatID, nil
 }
 
-// UsersIndex is an index of the registered users.
-type UsersIndex map[types.UserName]int
-
 type config struct {
 	Bots  map[types.BotName]string  `json:"bots" yaml:"bots"`
 	Chats map[types.ChatName]string `json:"chats" yaml:"chats"`
-	Users UsersIndex                `json:"users" yaml:"users"`
 
 	DefaultBot  types.BotName  `json:"default_bot" yaml:"default_bot"`
 	DefaultChat types.ChatName `json:"default_chat" yaml:"default_chat"`

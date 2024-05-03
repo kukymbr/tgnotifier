@@ -27,8 +27,8 @@ Usage:
   tgnotifier [flags]
 
 Flags:
-      --bot string                      Bot name to send message from (defined in config); if not set, the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
-      --chat string                     Chat name to send message to (defined in config); if not set, the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
+      --bot string                      Bot name to send message from (defined in config); if not set, the default_bot directive or the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
+      --chat string                     Chat name to send message to (defined in config); if not set, the default_chat directive or the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
       --config string                   Path to a config file
       --debug                           Enable the debug mode
       --disable-notification            Disable message sound notification

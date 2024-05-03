@@ -60,14 +60,16 @@ func initFlags(cmd *cobra.Command) {
 		&opt.BotName,
 		"bot",
 		"Bot name to send message from (defined in config); "+
-			"if not set, the bot from the "+config.EnvDefaultBot+" env var will be used",
+			"if not set, the default_bot directive or the bot "+
+			"from the "+config.EnvDefaultBot+" env var will be used",
 	)
 
 	cmd.Flags().Var(
 		&opt.ChatName,
 		"chat",
 		"Chat name to send message to (defined in config); "+
-			"if not set, the chat ID from the "+config.EnvDefaultChat+" env var will be used",
+			"if not set, the default_chat directive or the chat ID "+
+			"from the "+config.EnvDefaultChat+" env var will be used",
 	)
 
 	cmd.Flags().StringVar(

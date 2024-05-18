@@ -107,6 +107,8 @@ tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=anot
 ## TODO
 
 - [x] Define default bot & chat in config file.
+- [ ] Optional user's config file in the home dir.
+- [ ] Silence schedule in config.
 - [ ] Docker configuration.
 
 ## License

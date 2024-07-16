@@ -124,13 +124,13 @@ func parseResponse(resp *http.Response, target any) (*TgErrorResponse, error) {
 	if resp.Body != nil {
 		body, err = io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("read reponse body: %w", err)
+			return nil, fmt.Errorf("read response body: %w", err)
 		}
 	}
 
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		if err := jsoniter.Unmarshal(body, target); err != nil {
-			return nil, fmt.Errorf("decode reponse body (%s): %w", string(body), err)
+			return nil, fmt.Errorf("decode response body (%s): %w", string(body), err)
 		}
 
 		return nil, nil
@@ -139,7 +139,7 @@ func parseResponse(resp *http.Response, target any) (*TgErrorResponse, error) {
 	var errResp *TgErrorResponse
 
 	if err := jsoniter.Unmarshal(body, &errResp); err != nil {
-		return nil, fmt.Errorf("failed to decode error reponse body (%s): %w", string(body), err)
+		return nil, fmt.Errorf("failed to decode error response body (%s): %w", string(body), err)
 	}
 
 	return errResp, nil

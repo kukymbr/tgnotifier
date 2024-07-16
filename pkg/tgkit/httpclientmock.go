@@ -55,7 +55,7 @@ func (m *HTTPClientJSONMock) Post(url, _ string, _ io.Reader) (resp *http.Respon
 }
 
 func (m *HTTPClientJSONMock) getResponse(method string, url string) *http.Response {
-	noRespErr := fmt.Errorf("no test reponse is registered for '%s %s'", method, url)
+	noRespErr := fmt.Errorf("no test response is registered for '%s %s'", method, url)
 
 	if m.responses == nil {
 		panic(noRespErr)

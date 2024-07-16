@@ -2,6 +2,7 @@ package sender
 
 import (
 	"context"
+	"time"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/msgproc"
@@ -48,11 +49,16 @@ func (s *Sender) Send(
 
 	msg.Text = s.msgProc.Process(msg.Text)
 
+	disableNotification := msg.DisableNotification
+	if s.conf.GetSilenceSchedule().Has(time.Now()) {
+		disableNotification = true
+	}
+
 	return s.client.SendMessage(bot, tgkit.TgMessageRequest{
 		ChatID:              chatID,
 		Text:                msg.Text,
 		ParseMode:           msg.ParseMode.String(),
-		DisableNotification: msg.DisableNotification,
+		DisableNotification: disableNotification,
 		ProtectContent:      msg.ProtectContent,
 	})
 }

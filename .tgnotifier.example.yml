@@ -22,3 +22,8 @@ default_bot: "first_bot"
 # The `TGNOTIFIER_DEFAULT_CHAT` environment variable overrides this value if defined.
 # Chat with this name must be defined in the `chats` config section.
 default_chat: "main_chat"
+
+# Time, when all messages are sent without a sound notification.
+silence_schedule:
+  - from: 22:00
+    to: 9:00

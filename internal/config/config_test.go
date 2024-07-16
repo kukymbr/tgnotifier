@@ -3,6 +3,7 @@ package config_test
 import (
 	"os"
 	"testing"
+	"time"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/types"
@@ -90,6 +91,18 @@ func TestNewConfig(t *testing.T) {
 
 				assertChat(t, conf, "main_chat", "-12345")
 				assertChat(t, conf, "secondary_chat", "@my_test_channel")
+
+				interval := conf.GetSilenceSchedule()
+				now := time.Now()
+
+				assert.True(
+					t,
+					interval.Has(time.Date(
+						now.Year(), now.Month(), now.Day(),
+						23, 30, 0, 0,
+						now.Location(),
+					)),
+				)
 			},
 		},
 		{

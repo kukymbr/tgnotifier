@@ -66,7 +66,7 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("read config data from reader: %w", err)
 	}
 
-	var raw *config
+	var raw *configDTO
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return nil, fmt.Errorf("decode config data: %w", err)
@@ -104,6 +104,11 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 	conf.defaultBotName = raw.DefaultBot
 	conf.defaultChatName = raw.DefaultChat
 
+	conf.silenceSchedule, err = parseTimeSchedule(raw.SilenceSchedule)
+	if err != nil {
+		return nil, fmt.Errorf("parse silence schedule from config: %w", err)
+	}
+
 	return conf, nil
 }
 
@@ -128,6 +133,33 @@ func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
 	return nil
 }
 
+func parseTimeSchedule(raw []silenceScheduleItem) (*types.TimeSchedule, error) {
+	schedule := &types.TimeSchedule{}
+
+	if len(raw) == 0 {
+		return schedule, nil
+	}
+
+	for _, item := range raw {
+		from, err := types.ParseKitchenTime(item.From)
+		if err != nil {
+			return nil, fmt.Errorf("parse 'from' value '%s': %w", item.From, err)
+		}
+
+		to, err := types.ParseKitchenTime(item.To)
+		if err != nil {
+			return nil, fmt.Errorf("parse 'to' value '%s': %w", item.From, err)
+		}
+
+		schedule.AddInterval(types.TimeInterval{
+			From: from,
+			To:   to,
+		})
+	}
+
+	return schedule, nil
+}
+
 // Config is a tgnotifier configuration.
 type Config struct {
 	bots  BotsIndex
@@ -135,6 +167,8 @@ type Config struct {
 
 	defaultBotName  types.BotName
 	defaultChatName types.ChatName
+
+	silenceSchedule *types.TimeSchedule
 }
 
 // Bots - returns registered bots index.
@@ -155,6 +189,15 @@ func (c *Config) GetDefaultBotName() types.BotName {
 // GetDefaultChatName returns a default chat name if no chat name defined in arguments.
 func (c *Config) GetDefaultChatName() types.ChatName {
 	return c.defaultChatName
+}
+
+// GetSilenceSchedule returns a schedule when all the messages should be sent without a sound.
+func (c *Config) GetSilenceSchedule() *types.TimeSchedule {
+	if c.silenceSchedule == nil {
+		c.silenceSchedule = &types.TimeSchedule{}
+	}
+
+	return c.silenceSchedule
 }
 
 func (c *Config) init() {
@@ -193,10 +236,17 @@ func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
 	return chatID, nil
 }
 
-type config struct {
+type configDTO struct {
 	Bots  map[types.BotName]string  `json:"bots" yaml:"bots"`
 	Chats map[types.ChatName]string `json:"chats" yaml:"chats"`
 
 	DefaultBot  types.BotName  `json:"default_bot" yaml:"default_bot"`
 	DefaultChat types.ChatName `json:"default_chat" yaml:"default_chat"`
+
+	SilenceSchedule []silenceScheduleItem `json:"silence_schedule" yaml:"silence_schedule"`
+}
+
+type silenceScheduleItem struct {
+	From string `json:"from" yaml:"from"`
+	To   string `json:"to" yaml:"to"`
 }

@@ -4,6 +4,8 @@
 
 [![License](https://img.shields.io/github/license/kukymbr/tgnotifier.svg)](https://github.com/kukymbr/tgnotifier/blob/main/LICENSE)
 [![Release](https://img.shields.io/github/release/kukymbr/tgnotifier.svg)](https://github.com/kukymbr/tgnotifier/releases/latest)
+[![GoDoc](https://godoc.org/github.com/kukymbr/tgnotifier?status.svg)](https://godoc.org/github.com/kukymbr/tgnotifier)
+[![GoReport](https://goreportcard.com/badge/github.com/kukymbr/tgnotifier)](https://goreportcard.com/report/github.com/kukymbr/tgnotifier)
 
 The `tgnotifier` is a tool to send a notification messages
 via the Telegram API.

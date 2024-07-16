@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate ./version.sh
+
 var opt = tgnotifier.NewOptions()
 
 func main() {
@@ -27,13 +29,10 @@ func main() {
 
 func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "tgnotifier",
-		Short: "Tool to send telegram notifications",
-		Long: `A tool send notifications via the Telegram HTTPS API.
-Supports environment variables:
-- ` + config.EnvDefaultBot + `: bot identity used if no --bot flag is provided;
-- ` + config.EnvDefaultChat + `: chat ID used if no --chat flag is provided. 
-`,
+		Use:     "tgnotifier",
+		Short:   "Tool to send telegram notifications",
+		Long:    `A tool send notifications via the Telegram HTTPS API.`,
+		Version: version,
 
 		SilenceErrors: true,
 		SilenceUsage:  true,

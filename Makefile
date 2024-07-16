@@ -1,9 +1,13 @@
 all:
 	make clean
+	make generate
 	make tidy
 	make test
 	make build
 	make lint
+
+generate:
+	go generate ./cmd/tgnotifier
 
 tidy:
 	go mod tidy

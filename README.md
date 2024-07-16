@@ -10,7 +10,25 @@ via the Telegram API.
 
 ## Installation
 
-For now, only the `go install` is supported to install the `tgnotifier`:
+To install the latest release of the `tgnotifier`, 
+download the archive with the binary for your OS and unpack it somewhere inside the PATH.
+
+* Ubuntu/Debian: [tgnotifier_v0.3.2_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.3.2_windows-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_windows-latest.zip)
+
+Installation on Ubuntu example:
+
+```shell
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_ubuntu-latest.zip
+unzip tgnotifier_v0.3.2_ubuntu-latest.zip -d /usr/local/bin/
+tgnotifier --version
+```
+
+> The `--version` flag is supported since the v0.3.2 version.
+
+### Compile from sources
+
+To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
 go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@latest
@@ -19,10 +37,6 @@ go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@latest
 ## CLI tool usage
 
 ```text
-Supports environment variables:
-- TGNOTIFIER_DEFAULT_BOT: bot identity used if no --bot flag is provided;
-- TGNOTIFIER_DEFAULT_CHAT: chat ID used if no --chat flag is provided.
-
 Usage:
   tgnotifier [flags]
 
@@ -36,6 +50,7 @@ Flags:
       --parse-mode message parse mode   Parse mode (MarkdownV2|HTML)
       --protect-content                 Protect message content from copying and forwarding
       --text string                     Message text
+  -v, --version                         version for tgnotifier
 ```
 
 ### Configuration
@@ -65,6 +80,14 @@ define a `default_bot` and  `default_chat` values in the config file:
 ```yaml
 default_bot: "first_bot"
 default_chat: "main_chat"
+```
+
+Defining the schedule when messages are sent without a sound notification:
+
+```yaml
+silence_schedule:
+  - from: 22:00
+    to: 9:00
 ```
 
 To run `tgnotifier` without the config file at all, 
@@ -106,11 +129,11 @@ tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=anot
 
 ## TODO
 
-- [x] Define default bot & chat in config file.
 - [ ] Optional user's config file in the home dir.
-- [ ] Silence schedule in config.
 - [ ] Docker configuration.
 - [ ] Predefined messages with templates and i18n. 
+- [x] Define default bot & chat in config file.
+- [x] Silence schedule in config.
 
 ## License
 

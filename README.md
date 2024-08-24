@@ -141,6 +141,7 @@ tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=anot
 
 - [ ] Optional user's config file in the home dir.
 - [ ] Docker configuration.
+- [ ] Replace map in config. 
 - [ ] Predefined messages with templates and i18n. 
 - [x] Define default bot & chat in config file.
 - [x] Silence schedule in config.

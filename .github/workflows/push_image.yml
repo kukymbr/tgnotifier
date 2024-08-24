@@ -57,3 +57,8 @@ jobs:
           
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+      - name: Test image
+        run: |
+          IMAGE_ID=${{ steps.names.outputs.IMAGE_ID }}
+          docker run --rm $IMAGE_ID:$VERSION --version

@@ -12,5 +12,5 @@ type DependencyContainer struct {
 	Config    *config.Config
 	Client    *tgkit.Client
 	Sender    *sender.Sender
-	Processor *msgproc.MessageProcessor
+	Processor msgproc.MessageProcessor
 }

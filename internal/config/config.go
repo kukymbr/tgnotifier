@@ -109,6 +109,8 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("parse silence schedule from config: %w", err)
 	}
 
+	conf.replaces = raw.Replaces
+
 	return conf, nil
 }
 
@@ -169,6 +171,8 @@ type Config struct {
 	defaultChatName types.ChatName
 
 	silenceSchedule *types.TimeSchedule
+
+	replaces map[string]string
 }
 
 // Bots - returns registered bots index.
@@ -198,6 +202,15 @@ func (c *Config) GetSilenceSchedule() *types.TimeSchedule {
 	}
 
 	return c.silenceSchedule
+}
+
+// Replaces returns substrings to be replaced in the messages.
+func (c *Config) Replaces() map[string]string {
+	if c.replaces == nil {
+		c.replaces = make(map[string]string)
+	}
+
+	return c.replaces
 }
 
 func (c *Config) init() {
@@ -244,6 +257,8 @@ type configDTO struct {
 	DefaultChat types.ChatName `json:"default_chat" yaml:"default_chat"`
 
 	SilenceSchedule []silenceScheduleItem `json:"silence_schedule" yaml:"silence_schedule"`
+
+	Replaces map[string]string `json:"replaces" yaml:"replaces"`
 }
 
 type silenceScheduleItem struct {

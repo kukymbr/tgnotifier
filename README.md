@@ -92,6 +92,14 @@ silence_schedule:
     to: 9:00
 ```
 
+Defining substrings to replace in the message texts:
+
+```yaml
+replaces:
+  "@test": "[Test](tg://user?id=123456789)"
+  "FYI": "for your information"
+```
+
 To run `tgnotifier` without the config file at all, 
 define the env vars with default bot credentials and chat ID:
 

@@ -1,18 +1,7 @@
 package msgproc
 
-import "strings"
-
-// NewMessageProcessor returns new MessageProcessor instance.
-func NewMessageProcessor() *MessageProcessor {
-	return &MessageProcessor{}
-}
-
 // MessageProcessor is a tool to process messages before sending.
-type MessageProcessor struct{}
-
-// Process a message.
-func (mp *MessageProcessor) Process(msg string) string {
-	msg = strings.TrimSpace(msg)
-
-	return msg
+type MessageProcessor interface {
+	// The Process receives the message text and returns it after processing.
+	Process(msg string) string
 }

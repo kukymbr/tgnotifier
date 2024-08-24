@@ -11,7 +11,7 @@ import (
 )
 
 // NewSender returns a new Sender instance.
-func NewSender(conf *config.Config, client *tgkit.Client, msgProc *msgproc.MessageProcessor) *Sender {
+func NewSender(conf *config.Config, client *tgkit.Client, msgProc msgproc.MessageProcessor) *Sender {
 	return &Sender{
 		conf:    conf,
 		client:  client,
@@ -23,7 +23,7 @@ func NewSender(conf *config.Config, client *tgkit.Client, msgProc *msgproc.Messa
 type Sender struct {
 	conf    *config.Config
 	client  *tgkit.Client
-	msgProc *msgproc.MessageProcessor
+	msgProc msgproc.MessageProcessor
 }
 
 // Send sends a message from the bot to the chat.

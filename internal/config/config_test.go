@@ -103,6 +103,8 @@ func TestNewConfig(t *testing.T) {
 						now.Location(),
 					)),
 				)
+
+				assert.Len(t, conf.Replaces(), 1)
 			},
 		},
 		{

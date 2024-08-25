@@ -61,4 +61,5 @@ jobs:
       - name: Test image
         run: |
           IMAGE_ID=${{ steps.names.outputs.IMAGE_ID }}
+          VERSION=${{ steps.names.outputs.VERSION }}
           docker run --rm $IMAGE_ID:$VERSION --version

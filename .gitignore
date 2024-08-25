@@ -9,6 +9,3 @@
 # Test generated files
 coverage_out
 coverage.html
-
-# Go generated files
-cmd/tgnotifier/version.go

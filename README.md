@@ -15,14 +15,14 @@ via the Telegram API.
 To install the latest release of the `tgnotifier`, 
 download the archive with the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.3.2_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.3.2_windows-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.4.4_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.4.4_windows-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_windows-latest.zip)
 
 Installation on Ubuntu example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.3.2/tgnotifier_v0.3.2_ubuntu-latest.zip
-unzip tgnotifier_v0.3.2_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_ubuntu-latest.zip
+unzip tgnotifier_v0.4.4_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
@@ -33,7 +33,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@latest
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.4.4
 ```
 
 ## CLI tool usage

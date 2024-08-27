@@ -10,8 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate ./version.sh
-
 var opt = tgnotifier.NewOptions()
 
 func main() {

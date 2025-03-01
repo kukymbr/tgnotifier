@@ -49,7 +49,7 @@ func TestOptions(t *testing.T) {
 		},
 		{
 			Name:    "invalid 1",
-			Options: *tgnotifier.NewOptions(),
+			Options: tgnotifier.NewOptions(),
 			Valid:   false,
 		},
 	}

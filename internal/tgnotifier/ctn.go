@@ -7,8 +7,29 @@ import (
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 )
 
+// NewDefaultDependencyContainer builds new default DependencyContainer.
+func NewDefaultDependencyContainer(configFilePath string) (DependencyContainer, error) {
+	conf, err := config.NewConfig(configFilePath)
+	if err != nil {
+		return DependencyContainer{}, err
+	}
+
+	client := tgkit.NewDefaultClient()
+	proc := msgproc.NewProcessingChain(
+		msgproc.NewTextNormalizer(),
+		msgproc.NewReplacer(conf.Replaces()),
+	)
+
+	return DependencyContainer{
+		Config:    conf,
+		Client:    client,
+		Sender:    sender.NewSender(conf, client, proc),
+		Processor: proc,
+	}, nil
+}
+
+// DependencyContainer is a struct containing components of the tgnotifier.
 type DependencyContainer struct {
-	EnvGetter func(string) string
 	Config    *config.Config
 	Client    *tgkit.Client
 	Sender    *sender.Sender

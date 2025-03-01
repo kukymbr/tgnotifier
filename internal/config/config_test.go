@@ -1,7 +1,6 @@
 package config_test
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -197,7 +196,7 @@ func TestNewConfig(t *testing.T) {
 				t.Setenv(key, val)
 			}
 
-			conf, err := config.NewConfig(test.ConfigFile, os.Getenv)
+			conf, err := config.NewConfig(test.ConfigFile)
 
 			test.Assert(t, conf, err)
 		})

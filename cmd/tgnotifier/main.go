@@ -30,7 +30,7 @@ func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 		Use:     "tgnotifier",
 		Short:   "Tool to send telegram notifications",
 		Long:    `A tool send notifications via the Telegram HTTPS API.`,
-		Version: version,
+		Version: tgnotifier.Version,
 
 		SilenceErrors: true,
 		SilenceUsage:  true,

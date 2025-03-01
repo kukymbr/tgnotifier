@@ -3,24 +3,30 @@ package tgnotifier
 import (
 	"context"
 	"fmt"
-	"os"
-
 	jsoniter "github.com/json-iterator/go"
-	"github.com/kukymbr/tgnotifier/internal/config"
-	"github.com/kukymbr/tgnotifier/internal/msgproc"
-	"github.com/kukymbr/tgnotifier/internal/sender"
 	"github.com/kukymbr/tgnotifier/internal/util"
-	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 )
 
 // Run executes the message sending.
-func Run(ctx context.Context, opt *Options) error {
-	ctn, err := getCtn(opt)
+func Run(ctx context.Context, opt Options) error {
+	opt.Normalize()
+
+	if err := opt.Validate(); err != nil {
+		return fmt.Errorf("arguments are invalid: %w", err)
+	}
+
+	ctn, err := NewDefaultDependencyContainer(opt.ConfigPath)
 	if err != nil {
 		return err
 	}
 
-	printDebug(opt, ctn)
+	if opt.BotName == "" {
+		opt.BotName = ctn.Config.GetDefaultBotName()
+	}
+
+	if opt.ChatName == "" {
+		opt.ChatName = ctn.Config.GetDefaultChatName()
+	}
 
 	msg, err := ctn.Sender.Send(ctx, opt.BotName, opt.ChatName, opt.Message)
 	if err != nil {
@@ -35,59 +41,4 @@ func Run(ctx context.Context, opt *Options) error {
 	fmt.Print(string(data))
 
 	return nil
-}
-
-func getCtn(opt *Options) (*DependencyContainer, error) {
-	if opt == nil {
-		panic("nil options given")
-	}
-
-	opt.Normalize()
-
-	if err := opt.Validate(); err != nil {
-		return nil, fmt.Errorf("arguments are invalid: %w", err)
-	}
-
-	envGetter := os.Getenv
-
-	conf, err := config.NewConfig(opt.ConfigPath, envGetter)
-	if err != nil {
-		return nil, err
-	}
-
-	if opt.BotName == "" {
-		opt.BotName = conf.GetDefaultBotName()
-	}
-
-	if opt.ChatName == "" {
-		opt.ChatName = conf.GetDefaultChatName()
-	}
-
-	client := tgkit.NewDefaultClient()
-	proc := msgproc.NewProcessingChain(
-		msgproc.NewTextNormalizer(),
-		msgproc.NewReplacer(conf.Replaces()),
-	)
-
-	return &DependencyContainer{
-		EnvGetter: envGetter,
-		Config:    conf,
-		Client:    client,
-		Sender:    sender.NewSender(conf, client, proc),
-		Processor: proc,
-	}, nil
-}
-
-func printDebug(opt *Options, ctn *DependencyContainer) {
-	if !opt.IsDebug {
-		return
-	}
-
-	if data, err := jsoniter.Marshal(opt); err == nil {
-		fmt.Println("Options:")
-		fmt.Println(string(data))
-	}
-
-	fmt.Println(config.EnvDefaultBot + "=" + ctn.EnvGetter(config.EnvDefaultBot))
-	fmt.Println(config.EnvDefaultChat + "=" + ctn.EnvGetter(config.EnvDefaultChat))
 }

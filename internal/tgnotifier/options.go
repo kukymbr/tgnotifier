@@ -14,10 +14,8 @@ import (
 const DefaultConfigPath = ".tgnotifier.yml"
 
 // NewOptions creates new Options with default values.
-func NewOptions() *Options {
-	opt := &Options{}
-
-	return opt
+func NewOptions() Options {
+	return Options{}
 }
 
 // Options is a tgnotifier CLI options.

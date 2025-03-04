@@ -21,8 +21,8 @@ download the archive with the binary for your OS and unpack it somewhere inside 
 Installation on Ubuntu example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_ubuntu-latest.zip
-unzip tgnotifier_v0.4.4_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0-beta/tgnotifier_v0.5.0-beta_ubuntu-latest.zip
+unzip tgnotifier_v0.5.0-beta_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
@@ -33,7 +33,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.4.4
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.5.0-beta
 ```
 
 ## Configuration
@@ -157,8 +157,10 @@ See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 ## TODO
 
 - [ ] Optional user's config file in the home dir.
-- [ ] Docker configuration.
 - [ ] Predefined messages with templates and i18n. 
+- [ ] gRPC server.
+- [ ] HTTP server.
+- [x] Docker configuration.
 - [x] Replace map in config.
 - [x] Define default bot & chat in config file.
 - [x] Silence schedule in config.

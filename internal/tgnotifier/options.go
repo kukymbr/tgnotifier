@@ -1,13 +1,9 @@
 package tgnotifier
 
 import (
-	"fmt"
+	"github.com/kukymbr/tgnotifier/internal/types"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"github.com/kukymbr/tgnotifier/internal/sender"
-	"github.com/kukymbr/tgnotifier/internal/types"
 )
 
 // DefaultConfigPath is a path to a config file by default.
@@ -18,20 +14,14 @@ func NewOptions() Options {
 	return Options{}
 }
 
-// Options is a tgnotifier CLI options.
-type Options struct {
+// GenericOptions are the options shared between commands.
+type GenericOptions struct {
 	ConfigPath string
-
-	BotName  types.BotName
-	ChatName types.ChatName
-
-	Message sender.MessageOptions
-
-	IsDebug bool
+	IsDebug    bool
 }
 
 // Normalize normalizes the values and sets the default values if missing.
-func (opt *Options) Normalize() {
+func (opt *GenericOptions) Normalize() {
 	if opt.ConfigPath == "" {
 		if _, err := os.Stat(DefaultConfigPath); err == nil {
 			opt.ConfigPath = DefaultConfigPath
@@ -41,15 +31,20 @@ func (opt *Options) Normalize() {
 	if opt.ConfigPath != "" {
 		opt.ConfigPath = filepath.Clean(opt.ConfigPath)
 	}
+}
 
-	opt.Message.Text = strings.TrimSpace(opt.Message.Text)
+// Options is a tgnotifier CLI options.
+type Options struct {
+	GenericOptions GenericOptions
+	SendOptions    types.SendOptions
+}
+
+// Normalize normalizes the values and sets the default values if missing.
+func (opt *Options) Normalize() {
+	opt.GenericOptions.Normalize()
 }
 
 // Validate validates if given values are valid.
 func (opt *Options) Validate() error {
-	if opt.Message.Text == "" {
-		return fmt.Errorf("no message text given")
-	}
-
 	return nil
 }

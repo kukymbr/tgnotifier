@@ -7,28 +7,20 @@ import (
 	"github.com/kukymbr/tgnotifier/internal/util"
 )
 
-// Run executes the message sending.
-func Run(ctx context.Context, opt Options) error {
+// RunSendMessage executes the message sending.
+func RunSendMessage(ctx context.Context, opt Options) error {
 	opt.Normalize()
 
 	if err := opt.Validate(); err != nil {
 		return fmt.Errorf("arguments are invalid: %w", err)
 	}
 
-	ctn, err := NewDefaultDependencyContainer(opt.ConfigPath)
+	ctn, err := NewDefaultDependencyContainer(opt.GenericOptions.ConfigPath)
 	if err != nil {
 		return err
 	}
 
-	if opt.BotName == "" {
-		opt.BotName = ctn.Config.GetDefaultBotName()
-	}
-
-	if opt.ChatName == "" {
-		opt.ChatName = ctn.Config.GetDefaultChatName()
-	}
-
-	msg, err := ctn.Sender.Send(ctx, opt.BotName, opt.ChatName, opt.Message)
+	msg, err := ctn.Sender.Send(ctx, opt.SendOptions)
 	if err != nil {
 		return err
 	}

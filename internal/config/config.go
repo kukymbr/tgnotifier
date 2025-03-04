@@ -22,6 +22,8 @@ type Config struct {
 	silenceSchedule *types.TimeSchedule
 
 	replaces map[string]string
+
+	grpc GRPCServerConfig
 }
 
 // Bots - returns registered bots index.
@@ -62,6 +64,10 @@ func (c *Config) Replaces() map[string]string {
 	return c.replaces
 }
 
+func (c *Config) GRPC() GRPCServerConfig {
+	return c.grpc
+}
+
 func (c *Config) init() {
 	if c.bots == nil {
 		c.bots = make(BotsIndex)
@@ -98,19 +104,10 @@ func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
 	return chatID, nil
 }
 
-type configDTO struct {
-	Bots  map[types.BotName]string  `json:"bots" yaml:"bots"`
-	Chats map[types.ChatName]string `json:"chats" yaml:"chats"`
-
-	DefaultBot  types.BotName  `json:"default_bot" yaml:"default_bot"`
-	DefaultChat types.ChatName `json:"default_chat" yaml:"default_chat"`
-
-	SilenceSchedule []silenceScheduleItem `json:"silence_schedule" yaml:"silence_schedule"`
-
-	Replaces map[string]string `json:"replaces" yaml:"replaces"`
+type GRPCServerConfig struct {
+	port int
 }
 
-type silenceScheduleItem struct {
-	From string `json:"from" yaml:"from"`
-	To   string `json:"to" yaml:"to"`
+func (c GRPCServerConfig) GetPort() int {
+	return c.port
 }

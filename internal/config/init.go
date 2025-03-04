@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+const (
+	defaultGRPCPort = 80
+)
+
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
 func NewConfig(path string) (*Config, error) {
@@ -104,6 +108,13 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 	}
 
 	conf.replaces = raw.Replaces
+	conf.grpc = GRPCServerConfig{
+		port: raw.GRPC.Port,
+	}
+
+	if conf.grpc.port == 0 {
+		conf.grpc.port = defaultGRPCPort
+	}
 
 	return conf, nil
 }

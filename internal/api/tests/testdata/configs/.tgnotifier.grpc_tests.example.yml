@@ -35,4 +35,4 @@ replaces:
 # gRPC server setup.
 grpc:
   # Port to listen on.
-  port: 8080
+  port: 50051

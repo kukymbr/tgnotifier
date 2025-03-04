@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/kukymbr/tgnotifier/internal/server/grpc"
 	"os"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
@@ -10,7 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var opt = tgnotifier.NewOptions()
+var (
+	sendOptions    = tgnotifier.NewOptions()
+	genericOptions = tgnotifier.GenericOptions{}
+)
 
 func main() {
 	ctx := context.Background()
@@ -26,35 +30,70 @@ func main() {
 }
 
 func getRootCommandDefinition(ctx context.Context) *cobra.Command {
+	cmd := getSendCommandDefinition(ctx, "tgnotifier")
+
+	cmd.AddCommand(
+		getSendCommandDefinition(ctx, "send"),
+		getGRPCCommandDefinition(),
+	)
+
+	return cmd
+}
+
+func getSendCommandDefinition(ctx context.Context, use string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "tgnotifier",
+		Use:     use,
 		Short:   "Tool to send telegram notifications",
 		Long:    `A tool send notifications via the Telegram HTTPS API.`,
-		Version: version,
+		Version: tgnotifier.Version,
 
 		SilenceErrors: true,
 		SilenceUsage:  true,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return tgnotifier.Run(ctx, opt)
+			return tgnotifier.RunSendMessage(ctx, sendOptions)
 		},
 	}
 
-	initFlags(cmd)
+	initSendFlags(cmd)
 
 	return cmd
 }
 
-func initFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&opt.ConfigPath,
-		"config",
-		"",
-		"Path to a config file",
-	)
+func getGRPCCommandDefinition() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "grpc",
+		Short:   "tgnotifier gRPC server",
+		Long:    `Starts an gRPC server to send notifications via the Telegram HTTPS API.`,
+		Version: tgnotifier.Version,
+
+		SilenceErrors: true,
+		SilenceUsage:  true,
+
+		RunE: func(cmd *cobra.Command, args []string) error {
+			sendOptions.Normalize()
+
+			ctn, err := tgnotifier.NewDefaultDependencyContainer(genericOptions.ConfigPath)
+			if err != nil {
+				return err
+			}
+
+			server := grpc.New(ctn.Config, ctn.Sender)
+
+			return server.Run()
+		},
+	}
+
+	initGenericFlags(cmd, &genericOptions)
+
+	return cmd
+}
+
+func initSendFlags(cmd *cobra.Command) {
+	initGenericFlags(cmd, &sendOptions.GenericOptions)
 
 	cmd.Flags().Var(
-		&opt.BotName,
+		&sendOptions.SendOptions.BotName,
 		"bot",
 		"Bot name to send message from (defined in config); "+
 			"if not set, the default_bot directive or the bot "+
@@ -62,7 +101,7 @@ func initFlags(cmd *cobra.Command) {
 	)
 
 	cmd.Flags().Var(
-		&opt.ChatName,
+		&sendOptions.SendOptions.ChatName,
 		"chat",
 		"Chat name to send message to (defined in config); "+
 			"if not set, the default_chat directive or the chat ID "+
@@ -70,7 +109,7 @@ func initFlags(cmd *cobra.Command) {
 	)
 
 	cmd.Flags().StringVar(
-		&opt.Message.Text,
+		&sendOptions.SendOptions.Message.Text,
 		"text",
 		"",
 		"Message text",
@@ -78,23 +117,32 @@ func initFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("text")
 
 	cmd.Flags().Var(
-		&opt.Message.ParseMode,
+		&sendOptions.SendOptions.Message.ParseMode,
 		"parse-mode",
 		"Parse mode (MarkdownV2|HTML)",
 	)
 
 	cmd.Flags().BoolVar(
-		&opt.Message.DisableNotification,
+		&sendOptions.SendOptions.Message.DisableNotification,
 		"disable-notification",
 		false,
 		"Disable message sound notification",
 	)
 
 	cmd.Flags().BoolVar(
-		&opt.Message.ProtectContent,
+		&sendOptions.SendOptions.Message.ProtectContent,
 		"protect-content",
 		false,
 		"Protect message content from copying and forwarding",
+	)
+}
+
+func initGenericFlags(cmd *cobra.Command, opt *tgnotifier.GenericOptions) {
+	cmd.Flags().StringVar(
+		&opt.ConfigPath,
+		"config",
+		"",
+		"Path to a config file",
 	)
 
 	cmd.Flags().BoolVar(

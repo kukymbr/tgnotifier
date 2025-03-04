@@ -1,9 +1,9 @@
 package tgnotifier_test
 
 import (
+	"github.com/kukymbr/tgnotifier/internal/types"
 	"testing"
 
-	"github.com/kukymbr/tgnotifier/internal/sender"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,16 +18,22 @@ func TestOptions(t *testing.T) {
 		{
 			Name: "valid 1",
 			Options: tgnotifier.Options{
-				BotName:  "",
-				ChatName: "",
-				Message: sender.MessageOptions{
-					Text: " test1 ",
+				SendOptions: types.SendOptions{
+					BotName:  "",
+					ChatName: "",
+					Message: types.MessageOptions{
+						Text: "test1",
+					},
 				},
 			},
 			Normalized: tgnotifier.Options{
-				ConfigPath: tgnotifier.DefaultConfigPath,
-				Message: sender.MessageOptions{
-					Text: "test1",
+				GenericOptions: tgnotifier.GenericOptions{
+					ConfigPath: tgnotifier.DefaultConfigPath,
+				},
+				SendOptions: types.SendOptions{
+					Message: types.MessageOptions{
+						Text: "test1",
+					},
 				},
 			},
 			Valid: true,
@@ -35,22 +41,23 @@ func TestOptions(t *testing.T) {
 		{
 			Name: "valid 2",
 			Options: tgnotifier.Options{
-				BotName:  "testBot",
-				ChatName: "testChat",
-				Message:  sender.MessageOptions{Text: "Test"},
+				SendOptions: types.SendOptions{
+					BotName:  "testBot",
+					ChatName: "testChat",
+					Message:  types.MessageOptions{Text: "Test"},
+				},
 			},
 			Normalized: tgnotifier.Options{
-				ConfigPath: tgnotifier.DefaultConfigPath,
-				BotName:    "testBot",
-				ChatName:   "testChat",
-				Message:    sender.MessageOptions{Text: "Test"},
+				GenericOptions: tgnotifier.GenericOptions{
+					ConfigPath: tgnotifier.DefaultConfigPath,
+				},
+				SendOptions: types.SendOptions{
+					BotName:  "testBot",
+					ChatName: "testChat",
+					Message:  types.MessageOptions{Text: "Test"},
+				},
 			},
 			Valid: true,
-		},
-		{
-			Name:    "invalid 1",
-			Options: *tgnotifier.NewOptions(),
-			Valid:   false,
 		},
 	}
 

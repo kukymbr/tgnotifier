@@ -27,38 +27,39 @@ type Sender struct {
 }
 
 // Send sends a message from the bot to the chat.
-func (s *Sender) Send(
-	ctx context.Context,
-	botName types.BotName,
-	chatName types.ChatName,
-	msg MessageOptions,
-) (*tgkit.TgMessage, error) {
+func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMessage, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
 
-	bot, err := s.conf.Bots().GetBot(botName)
+	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
+
+	if err := opt.Validate(); err != nil {
+		return nil, err
+	}
+
+	bot, err := s.conf.Bots().GetBot(opt.BotName)
 	if err != nil {
 		return nil, err
 	}
 
-	chatID, err := s.conf.Chats().GetChatID(chatName)
+	chatID, err := s.conf.Chats().GetChatID(opt.ChatName)
 	if err != nil {
 		return nil, err
 	}
 
-	msg.Text = s.msgProc.Process(msg.Text)
+	opt.Message.Text = s.msgProc.Process(opt.Message.Text)
 
-	disableNotification := msg.DisableNotification
+	disableNotification := opt.Message.DisableNotification
 	if s.conf.GetSilenceSchedule().Has(time.Now()) {
 		disableNotification = true
 	}
 
 	return s.client.SendMessage(bot, tgkit.TgMessageRequest{
 		ChatID:              chatID,
-		Text:                msg.Text,
-		ParseMode:           msg.ParseMode.String(),
+		Text:                opt.Message.Text,
+		ParseMode:           opt.Message.ParseMode.String(),
 		DisableNotification: disableNotification,
-		ProtectContent:      msg.ProtectContent,
+		ProtectContent:      opt.Message.ProtectContent,
 	})
 }

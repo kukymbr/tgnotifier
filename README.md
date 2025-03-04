@@ -36,26 +36,7 @@ To install `tgnotifier` from the source, use the `go install` command:
 go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.4.4
 ```
 
-## CLI tool usage
-
-```text
-Usage:
-  tgnotifier [flags]
-
-Flags:
-      --bot string                      Bot name to send message from (defined in config); if not set, the default_bot directive or the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
-      --chat string                     Chat name to send message to (defined in config); if not set, the default_chat directive or the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
-      --config string                   Path to a config file
-      --debug                           Enable the debug mode
-      --disable-notification            Disable message sound notification
-  -h, --help                            help for tgnotifier
-      --parse-mode message parse mode   Parse mode (MarkdownV2|HTML)
-      --protect-content                 Protect message content from copying and forwarding
-      --text string                     Message text
-  -v, --version                         version for tgnotifier
-```
-
-### Configuration
+## Configuration
 
 The `tgnotifier` could have a configuration file to use multiple bots and chats.
 See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available values.
@@ -76,7 +57,7 @@ chats:
   secondary_chat: "@my_test_channel"
 ```
 
-To use a program without a `bot` or a `chat` argument, 
+To use a program without a `bot` or a `chat` argument,
 define a `default_bot` and  `default_chat` values in the config file:
 
 ```yaml
@@ -100,12 +81,31 @@ replaces:
   "FYI": "for your information"
 ```
 
-To run `tgnotifier` without the config file at all, 
+To run `tgnotifier` without the config file at all,
 define the env vars with default bot credentials and chat ID:
 
 ```shell
 export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
 export TGNOTIFIER_DEFAULT_CHAT="-12345"
+```
+
+## CLI tool usage
+
+```text
+Usage:
+  tgnotifier send [flags]
+
+Flags:
+      --bot string                      Bot name to send message from (defined in config); if not set, the default_bot directive or the bot from the TGNOTIFIER_DEFAULT_BOT env var will be used
+      --chat string                     Chat name to send message to (defined in config); if not set, the default_chat directive or the chat ID from the TGNOTIFIER_DEFAULT_CHAT env var will be used
+      --config string                   Path to a config file
+      --debug                           Enable the debug mode
+      --disable-notification            Disable message sound notification
+  -h, --help                            help for send
+      --parse-mode message parse mode   Parse mode (MarkdownV2|HTML)
+      --protect-content                 Protect message content from copying and forwarding
+      --text string                     Message text
+  -v, --version                         version for send
 ```
 
 ### Command execution examples
@@ -136,6 +136,23 @@ Send a "Hello, World!" message from the `another_bot` to the `another_chat` usin
 ```shell
 tgnotifier --config="/path/to/another_config.yaml" --bot=another_bot --chat=another_chat --text="Hello, World!" 
 ```
+
+## gRPC server
+
+The tgnotifier could be started as an gRPC server. To run the server, use the `tgnotifier grpc` command:
+
+```text
+Usage:
+  tgnotifier grpc [flags]
+
+Flags:
+      --config string   Path to a config file
+      --debug           Enable the debug mode
+  -h, --help            help for grpc
+  -v, --version         version for grpc
+```
+
+See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 
 ## TODO
 

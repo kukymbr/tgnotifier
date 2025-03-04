@@ -1,3 +1,5 @@
+GOLANGCI_LINT_VERSION := 1.64.6
+
 all:
 	make clean
 	make generate
@@ -9,13 +11,18 @@ all:
 generate:
 	go generate ./cmd/tgnotifier
 
+proto:
+	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative
+
 tidy:
 	go mod tidy
 	go vet ./...
 
 lint:
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
-	golangci-lint run ./...
+	if [ ! -f ./bin/golangci-lint ]; then \
+  		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "./bin" "v${GOLANGCI_LINT_VERSION}"; \
+  	fi;
+	./bin/golangci-lint run ./...
 
 test:
 	go test -race -coverprofile=coverage_out ./...
@@ -25,6 +32,9 @@ test:
 
 test_short:
 	go test -short ./...
+
+test_grpc:
+	go test ./internal/api/tests/... -v -tags grpc_tests -count 1
 
 build:
 	go build ./cmd/tgnotifier

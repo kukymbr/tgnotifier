@@ -15,8 +15,8 @@ via the Telegram API.
 To install the latest release of the `tgnotifier`, 
 download the archive with the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.4.4_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.4.4_windows-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.4.4/tgnotifier_v0.4.4_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.5.0-beta_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0-beta/tgnotifier_v0.5.0-beta_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.5.0-beta_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0-beta/tgnotifier_v0.5.0-beta_windows-latest.zip)
 
 Installation on Ubuntu example:
 

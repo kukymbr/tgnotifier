@@ -1,0 +1,38 @@
+# The tgnotifier configuration file allows using the bot & chat names
+# instead of using the direct bot and chat IDs and tokens.
+
+# List of the available bots to send messages from
+# in format "botName": "<botID>:<botToken>".
+bots:
+  first_bot: "12345:FIRST_BOT_TOKEN"
+  second_bot: "bot54321:SECOND_BOT_TOKEN"
+
+# List of the available chats to send messages to
+# in format "chatName": "chatID" or "chatName": "@channel"
+chats:
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"
+
+# Default bot is a bot name to use if no bot name is defined in CLI arguments.
+# The `TGNOTIFIER_DEFAULT_BOT` environment variable overrides this value if defined.
+# Bot with this name must be defined in the `bots` config section.
+default_bot: "first_bot"
+
+# Default chat is a chat name to use if no chat name is defined in CLI arguments.
+# The `TGNOTIFIER_DEFAULT_CHAT` environment variable overrides this value if defined.
+# Chat with this name must be defined in the `chats` config section.
+default_chat: "main_chat"
+
+# Time, when all messages are sent without a sound notification.
+silence_schedule:
+  - from: 22:00
+    to: 9:00
+
+# Substrings to be replaced in the message texts in format `"old": "new"`.
+replaces:
+  "@test": "[Test](tg://user?id=123456789)"
+
+# gRPC server setup.
+grpc:
+  # Port to listen on.
+  port: 8080

@@ -1,0 +1,18 @@
+# This is an example of the docker compose configuration
+# with a tgnotifier as a gRPC service.
+
+services:
+
+  tgnotifier:
+    image: ghcr.io/kukymbr/tgnotifier:${TGNOTIFIER_VERSION}
+
+    # Create a volume with a tgnotifier config:
+    volumes:
+      - .tgnotifier.yml:/etc/tgnotifier/.tgnotifier.yml
+
+    # Expose the port to the host machine:
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    # Run tgnotifier as a gRPC server:
+    command: ["grpc", "--config=/etc/tgnotifier/.tgnotifier.yml"]

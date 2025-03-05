@@ -55,6 +55,18 @@ To install `tgnotifier` from the source, use the `go install` command:
 go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.5.0
 ```
 
+### Docker
+
+There is a Docker configuration for a `tgnotifier`.
+
+Pure `docker run` call example: 
+
+```shell
+docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.5.0 send --text="what's up?"
+```
+
+See the [docker/compose.yml](docker/compose.yml) file for a docker compose usage example.
+
 ## Configuration
 
 The `tgnotifier` could have a configuration file to use multiple bots and chats.

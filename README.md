@@ -158,8 +158,8 @@ See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 
 - [ ] Optional user's config file in the home dir.
 - [ ] Predefined messages with templates and i18n. 
-- [ ] gRPC server.
 - [ ] HTTP server.
+- [x] gRPC server.
 - [x] Docker configuration.
 - [x] Replace map in config.
 - [x] Define default bot & chat in config file.

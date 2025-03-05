@@ -187,9 +187,9 @@ See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 
 ## TODO
 
-- [ ] Optional user's config file in the home dir.
 - [ ] Predefined messages with templates and i18n. 
 - [ ] HTTP server.
+- [x] Optional user's config file in the home dir.
 - [x] gRPC server.
 - [x] Docker configuration.
 - [x] Replace map in config.

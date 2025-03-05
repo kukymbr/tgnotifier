@@ -16,13 +16,13 @@ The main feature of the `tgnotifier` is in the configuration,
 you could define bots and chats and just send the messages, just like this: 
 
 ```shell
-tgnotifier send --text="my cool message"
+tgnotifier send --text="😎 my cool message"
 ```
 
 or like this:
 
 ```shell
-tgnotifier send --text="my the most coolest message" --bot="cool_messages_bot" --chat="chat_for_cool_messages"
+tgnotifier send --text="🦖 my the most coolest message" --bot="cool_messages_bot" --chat="chat_for_cool_messages"
 ```
 
 One of the cases when you may want to use `tgnotifier` is an alerting from the CI/CD or some other services

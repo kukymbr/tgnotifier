@@ -70,6 +70,15 @@ func TestNewConfig(t *testing.T) {
 
 				assertBot(t, conf, types.DefaultBotName, "bot2:test2")
 				assertChat(t, conf, types.DefaultChatName, "@testChat2")
+
+				assert.NotNil(t, conf.GetSilenceSchedule())
+
+				replaces := conf.Replaces()
+
+				assert.NotNil(t, replaces)
+				assert.Len(t, replaces, 0)
+
+				assert.Equal(t, conf.GRPC().GetPort(), 80)
 			},
 		},
 		{
@@ -181,6 +190,14 @@ func TestNewConfig(t *testing.T) {
 			},
 		},
 		{
+			Name:       "With invalid file (broken schedule)",
+			ConfigFile: "./testdata/.tgnotifier.invalid.schedule.yml",
+			Assert: func(t *testing.T, conf *config.Config, err error) {
+				assert.Error(t, err)
+				assert.Nil(t, conf)
+			},
+		},
+		{
 			Name: "With invalid env",
 			Env:  map[string]string{"TGNOTIFIER_DEFAULT_BOT": "invalid identity"},
 			Assert: func(t *testing.T, conf *config.Config, err error) {
@@ -196,9 +213,42 @@ func TestNewConfig(t *testing.T) {
 				t.Setenv(key, val)
 			}
 
-			conf, err := config.NewConfig(test.ConfigFile)
+			var (
+				conf *config.Config
+				err  error
+			)
+
+			if test.ConfigFile != "" {
+				conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
+			} else {
+				conf, err = config.NewConfig()
+			}
 
 			test.Assert(t, conf, err)
 		})
 	}
+}
+
+func TestConfig_BotChatGetters(t *testing.T) {
+	t.Setenv("TGNOTIFIER_DEFAULT_BOT", "bot123:test")
+	t.Setenv("TGNOTIFIER_DEFAULT_CHAT", "@testChat")
+
+	conf, err := config.NewConfig()
+
+	require.NoError(t, err)
+	require.NotNil(t, conf)
+
+	t.Run("get unknown bot", func(t *testing.T) {
+		bot, err := conf.Bots().GetBot("unknown")
+
+		assert.Nil(t, bot)
+		assert.Error(t, err)
+	})
+
+	t.Run("get unknown chat", func(t *testing.T) {
+		chat, err := conf.Chats().GetChatID("unknown")
+
+		assert.Empty(t, chat)
+		assert.Error(t, err)
+	})
 }

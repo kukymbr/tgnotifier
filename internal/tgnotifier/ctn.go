@@ -9,7 +9,17 @@ import (
 
 // NewDefaultDependencyContainer builds new default DependencyContainer.
 func NewDefaultDependencyContainer(configFilePath string) (DependencyContainer, error) {
-	conf, err := config.NewConfig(configFilePath)
+	var (
+		conf *config.Config
+		err  error
+	)
+
+	if configFilePath != "" {
+		conf, err = config.NewConfig(config.FromFile(configFilePath))
+	} else {
+		conf, err = config.NewConfig()
+	}
+
 	if err != nil {
 		return DependencyContainer{}, err
 	}
@@ -23,7 +33,7 @@ func NewDefaultDependencyContainer(configFilePath string) (DependencyContainer, 
 	return DependencyContainer{
 		Config:    conf,
 		Client:    client,
-		Sender:    sender.NewSender(conf, client, proc),
+		Sender:    sender.New(conf, client, proc),
 		Processor: proc,
 	}, nil
 }

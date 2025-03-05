@@ -10,8 +10,8 @@ import (
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 )
 
-// NewSender returns a new Sender instance.
-func NewSender(conf *config.Config, client *tgkit.Client, msgProc msgproc.MessageProcessor) *Sender {
+// New returns a new Sender instance.
+func New(conf *config.Config, client *tgkit.Client, msgProc msgproc.MessageProcessor) *Sender {
 	return &Sender{
 		conf:    conf,
 		client:  client,
@@ -28,10 +28,6 @@ type Sender struct {
 
 // Send sends a message from the bot to the chat.
 func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMessage, error) {
-	if err := ctx.Err(); err != nil {
-		return nil, err
-	}
-
 	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
 
 	if err := opt.Validate(); err != nil {
@@ -53,6 +49,10 @@ func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMess
 	disableNotification := opt.Message.DisableNotification
 	if s.conf.GetSilenceSchedule().Has(time.Now()) {
 		disableNotification = true
+	}
+
+	if err := ctx.Err(); err != nil {
+		return nil, err
 	}
 
 	return s.client.SendMessage(bot, tgkit.TgMessageRequest{

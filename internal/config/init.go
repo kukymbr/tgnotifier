@@ -7,58 +7,74 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
+	"strings"
 )
 
 const (
 	defaultGRPCPort = 80
 )
 
+// SourceReaderFn is a config reader source factory.
+type SourceReaderFn func() (io.ReadCloser, error)
+
+// FromFile is a file config source factory.
+func FromFile(path string) SourceReaderFn {
+	return func() (io.ReadCloser, error) {
+		f, err := os.Open(path)
+		if err != nil {
+			return nil, fmt.Errorf("read config file %s: %w", path, err)
+		}
+
+		return f, nil
+	}
+}
+
+// FromReader is a io.Reader source factory.
+func FromReader(r io.Reader) SourceReaderFn {
+	return func() (io.ReadCloser, error) {
+		return io.NopCloser(r), nil
+	}
+}
+
+// FromString is a string config source factory.
+func FromString(s string) SourceReaderFn {
+	return FromReader(strings.NewReader(s))
+}
+
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
-func NewConfig(path string) (*Config, error) {
+func NewConfig(readerFactory ...SourceReaderFn) (*Config, error) {
 	var (
-		conf = &Config{}
-		err  error
+		conf   = &Config{}
+		reader io.ReadCloser
+		err    error
 	)
 
-	if path != "" {
-		conf, err = NewConfigFromFile(path)
+	if len(readerFactory) > 0 {
+		reader, err = readerFactory[0]()
+		if err != nil {
+			return nil, fmt.Errorf("failed to create config reader: %w", err)
+		}
+
+		defer func() {
+			_ = reader.Close()
+		}()
+
+		conf, err = newConfigFromReader(reader)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if err := readDefaultsFromEnv(conf, os.Getenv); err != nil {
+	if err := setupConfigValues(conf); err != nil {
 		return nil, err
-	}
-
-	if len(conf.bots) == 0 {
-		return nil, fmt.Errorf("no bots registered in config file or env")
-	}
-
-	if len(conf.chats) == 0 {
-		return nil, fmt.Errorf("no chats registered in config file or env")
 	}
 
 	return conf, nil
 }
 
-// NewConfigFromFile reads Config from the file.
-func NewConfigFromFile(path string) (*Config, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("read config file %s: %w", path, err)
-	}
-
-	defer func() {
-		_ = f.Close()
-	}()
-
-	return NewConfigFromReader(f)
-}
-
-// NewConfigFromReader reads Config from io.Reader.
-func NewConfigFromReader(inp io.Reader) (*Config, error) {
+// newConfigFromReader reads Config from io.Reader.
+func newConfigFromReader(inp io.Reader) (*Config, error) {
 	data, err := io.ReadAll(inp)
 	if err != nil {
 		return nil, fmt.Errorf("read config data from reader: %w", err)
@@ -112,17 +128,33 @@ func NewConfigFromReader(inp io.Reader) (*Config, error) {
 		port: raw.GRPC.Port,
 	}
 
+	return conf, nil
+}
+
+func setupConfigValues(conf *Config) error {
+	if err := readDefaultsFromEnv(conf); err != nil {
+		return err
+	}
+
+	if len(conf.bots) == 0 {
+		return fmt.Errorf("no bots registered in config file or env")
+	}
+
+	if len(conf.chats) == 0 {
+		return fmt.Errorf("no chats registered in config file or env")
+	}
+
 	if conf.grpc.port == 0 {
 		conf.grpc.port = defaultGRPCPort
 	}
 
-	return conf, nil
+	return nil
 }
 
-func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
+func readDefaultsFromEnv(conf *Config) error {
 	conf.init()
 
-	if identity := getEnv(EnvDefaultBot); identity != "" {
+	if identity := os.Getenv(EnvDefaultBot); identity != "" {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
 			return fmt.Errorf("read bot from %s: %w", EnvDefaultBot, err)
@@ -132,7 +164,7 @@ func readDefaultsFromEnv(conf *Config, getEnv func(string) string) error {
 		conf.defaultBotName = types.DefaultBotName
 	}
 
-	if chatIDStr := getEnv(EnvDefaultChat); chatIDStr != "" {
+	if chatIDStr := os.Getenv(EnvDefaultChat); chatIDStr != "" {
 		conf.chats[types.DefaultChatName] = tgkit.ChatID(chatIDStr)
 		conf.defaultChatName = types.DefaultChatName
 	}

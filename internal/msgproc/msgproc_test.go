@@ -33,6 +33,16 @@ func TestMessageProcessor_Process(t *testing.T) {
 			),
 			Expected: `Hello, @id04042!`,
 		},
+		{
+			Input:     " Test empty chain ",
+			Processor: msgproc.NewProcessingChain(),
+			Expected:  " Test empty chain ",
+		},
+		{
+			Input:     "Test empty replaces",
+			Processor: msgproc.NewReplacer(types.KeyVal{}),
+			Expected:  "Test empty replaces",
+		},
 	}
 
 	for i, test := range tests {

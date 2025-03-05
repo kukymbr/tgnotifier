@@ -1,0 +1,18 @@
+# The tgnotifier configuration file allows using the bot & chat names
+# instead of using the direct bot and chat IDs and tokens.
+
+# List of the available bots to send messages from
+# in format "botName": "<botID>:<botToken>".
+bots:
+  first_bot: "12345:FIRST_BOT_TOKEN"
+
+# List of the available chats to send messages to
+# in format "chatName": "chatID" or "chatName": "@channel"
+chats:
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"
+
+# Time, when all messages are sent without a sound notification.
+silence_schedule:
+  - from: 1 jan 2024
+    to: not_a_time

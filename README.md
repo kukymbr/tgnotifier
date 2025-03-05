@@ -10,6 +10,25 @@
 The `tgnotifier` is a tool to send a notification messages
 via the Telegram API.
 
+## Okay, but why?
+
+The main feature of the `tgnotifier` is in the configuration, 
+you could define bots and chats and just send the messages, just like this: 
+
+```shell
+tgnotifier send --text="my cool message"
+```
+
+or like this:
+
+```shell
+tgnotifier send --text="my the most coolest message" --bot="cool_messages_bot" --chat="chat_for_cool_messages"
+```
+
+One of the cases when you may want to use `tgnotifier` is an alerting from the CI/CD or some other services
+via the single entrypoint without exposing the bot credentials in every service or configuration. 
+The gRPC server is also presented in the `tgnotifier` to have it running as a service.
+
 ## Installation
 
 To install the latest release of the `tgnotifier`, 

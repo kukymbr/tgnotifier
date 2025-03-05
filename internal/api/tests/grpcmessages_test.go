@@ -12,7 +12,7 @@ func (s *grpcTestSuite) TestSendMessage() {
 		BotName:  &s.botName,
 		ChatName: &s.chatName,
 		Message: &grpc.MessageRequest{
-			Text:                getPtr("test_message"),
+			Text:                getPtr("😎 test_message"),
 			DisableNotification: getPtr(true),
 		},
 	})

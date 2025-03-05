@@ -7,43 +7,15 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
-	"strings"
 )
 
 const (
 	defaultGRPCPort = 80
 )
 
-// SourceReaderFn is a config reader source factory.
-type SourceReaderFn func() (io.ReadCloser, error)
-
-// FromFile is a file config source factory.
-func FromFile(path string) SourceReaderFn {
-	return func() (io.ReadCloser, error) {
-		f, err := os.Open(path)
-		if err != nil {
-			return nil, fmt.Errorf("read config file %s: %w", path, err)
-		}
-
-		return f, nil
-	}
-}
-
-// FromReader is a io.Reader source factory.
-func FromReader(r io.Reader) SourceReaderFn {
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(r), nil
-	}
-}
-
-// FromString is a string config source factory.
-func FromString(s string) SourceReaderFn {
-	return FromReader(strings.NewReader(s))
-}
-
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
-func NewConfig(readerFactory ...SourceReaderFn) (*Config, error) {
+func NewConfig(readerFactory ...SourceReaderFactory) (*Config, error) {
 	var (
 		conf   = &Config{}
 		reader io.ReadCloser
@@ -55,7 +27,9 @@ func NewConfig(readerFactory ...SourceReaderFn) (*Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to create config reader: %w", err)
 		}
+	}
 
+	if reader != nil {
 		defer func() {
 			_ = reader.Close()
 		}()

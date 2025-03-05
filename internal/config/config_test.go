@@ -218,11 +218,7 @@ func TestNewConfig(t *testing.T) {
 				err  error
 			)
 
-			if test.ConfigFile != "" {
-				conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
-			} else {
-				conf, err = config.NewConfig()
-			}
+			conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
 
 			test.Assert(t, conf, err)
 		})

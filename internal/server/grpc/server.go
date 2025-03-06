@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"github.com/kukymbr/tgnotifier/internal/config"
+	"github.com/kukymbr/tgnotifier/internal/util"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"net"
 )
 
@@ -17,7 +17,7 @@ func New(conf *config.Config, sender Sender) *Server {
 	grpcSrv := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		recovery.UnaryServerInterceptor(
 			recovery.WithRecoveryHandler(func(p interface{}) (err error) {
-				return status.Errorf(codes.Internal, fmt.Sprintf("unhandled panic: %v", p))
+				return util.ErrorResponse(codes.Internal, fmt.Sprintf("unhandled panic: %v", p))
 			}),
 		),
 	))

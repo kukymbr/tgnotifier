@@ -1,26 +1,36 @@
 GOLANGCI_LINT_VERSION := 1.64.6
 
 all:
-	make clean
-	make generate
-	make tidy
-	make test
-	make build
-	make lint
+	$(MAKE) clean
+	$(MAKE) prepare
+	$(MAKE) validate
+	$(MAKE) build
 
-generate:
-	go generate ./cmd/tgnotifier
-
-install_tools:
+prepare:
+	go mod tidy
 	go install ./...
+	$(MAKE) apis
+
+validate:
+	go vet ./...
+	$(MAKE) lint
+	$(MAKE) test
+
+build:
+	go build ./cmd/tgnotifier
+
+build_without_gprc:
+	go build -tags no_grpc ./cmd/tgnotifier
+
+build_without_http:
+	go build -tags no_http ./cmd/tgnotifier
+
+build_without_servers:
+	go build -tags no_http,no_grpc ./cmd/tgnotifier
 
 apis:
 	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/
 	oapi-codegen --config=./api/http/oapi.config.yml ./api/http/openapi.yaml
-
-tidy:
-	go mod tidy
-	go vet ./...
 
 lint:
 	if [ ! -f ./bin/golangci-lint ]; then \
@@ -39,18 +49,6 @@ test_short:
 
 test_grpc:
 	go test ./internal/api/tests/... -v -tags grpc_tests -count 1
-
-build:
-	go build ./cmd/tgnotifier
-
-build_without_gprc:
-	go build -tags no_grpc ./cmd/tgnotifier
-
-build_without_http:
-	go build -tags no_http ./cmd/tgnotifier
-
-build_without_servers:
-	go build -tags no_http,no_grpc ./cmd/tgnotifier
 
 clean:
 	go clean

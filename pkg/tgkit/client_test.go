@@ -190,7 +190,7 @@ func TestClient_SendMessage(t *testing.T) {
 
 			client := tgkit.NewClientWithOptions(
 				tgkit.WithHTTPClient(httpClient),
-				tgkit.WithRetry(2, 50*time.Millisecond),
+				tgkit.WithRetrier(tgkit.NewProgressiveRetrier(2, 3*time.Millisecond, 2)),
 			)
 			bot, err := tgkit.NewBot(test.BotIdentity)
 

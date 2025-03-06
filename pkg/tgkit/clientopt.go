@@ -1,19 +1,18 @@
 package tgkit
 
-import "time"
-
-// ClientOption
+// ClientOption is a client constructor configuration option.
 type ClientOption func(*Client)
 
+// WithHTTPClient defines an HTTPClient instance to use with a Client.
 func WithHTTPClient(httpClient HTTPClient) ClientOption {
 	return func(c *Client) {
 		c.httpClient = httpClient
 	}
 }
 
-func WithRetry(attempts int, delay time.Duration) ClientOption {
+// WithRetrier defines a way or requests retries using the RequestRetrier instance.
+func WithRetrier(retrier RequestRetrier) ClientOption {
 	return func(c *Client) {
-		c.retryAttempts = attempts
-		c.retryDelay = delay
+		c.retrier = retrier
 	}
 }

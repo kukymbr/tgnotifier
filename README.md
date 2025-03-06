@@ -34,14 +34,14 @@ The gRPC server is also presented in the `tgnotifier` to have it running as a se
 To install the latest release of the `tgnotifier`, 
 download the archive with the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.6.0_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.6.0_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.6.1_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.1/tgnotifier_v0.6.1_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.6.1_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.1/tgnotifier_v0.6.1_windows-latest.zip)
 
 Installation on Ubuntu example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_ubuntu-latest.zip
-unzip tgnotifier_v0.6.0_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.6.1/tgnotifier_v0.6.1_ubuntu-latest.zip
+unzip tgnotifier_v0.6.1_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
@@ -52,7 +52,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.6.0
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.6.1
 ```
 
 <details>
@@ -61,14 +61,14 @@ go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.6.0
 There is a possibility to compile a custom build of the `tgnotifier`.
 Golang 1.23 and above is required.
 
-Available since v0.6.0.
+Available since v0.6.1.
 
 ```shell
 # Clone the repository:
 git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
 
 # Checkout tag you want to compile:
-git checkout v0.6.0
+git checkout v0.6.1
 
 # To build the tgnotifier with all components:
 make build
@@ -89,7 +89,7 @@ You could check type of the build by running the `tgnotifier version` command:
 ```shell
 ./tgnotifier version
 
-# tgnotifier version: v0.6.0
+# tgnotifier version: v0.6.1
 #
 # With gRPC server: true
 # With HTTP server: true

@@ -43,5 +43,14 @@ test_grpc:
 build:
 	go build ./cmd/tgnotifier
 
+build_without_gprc:
+	go build -tags no_grpc ./cmd/tgnotifier
+
+build_without_http:
+	go build -tags no_http ./cmd/tgnotifier
+
+build_without_servers:
+	go build -tags no_http,no_grpc ./cmd/tgnotifier
+
 clean:
 	go clean

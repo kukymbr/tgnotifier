@@ -1,3 +1,5 @@
+//go:build !no_http
+
 package http
 
 import (

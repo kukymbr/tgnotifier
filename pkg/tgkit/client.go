@@ -18,19 +18,39 @@ const (
 
 // NewDefaultClient creates a new default telegram Client instance.
 func NewDefaultClient() *Client {
-	return NewClient(&http.Client{
-		Timeout: 30 * time.Second,
-	})
+	return NewClientWithOptions(
+		WithRetry(3, time.Second),
+		WithHTTPClient(getDefaultHTTPClient()),
+	)
+}
+
+// NewClientWithOptions creates new Client instance with a construction options.
+func NewClientWithOptions(options ...ClientOption) *Client {
+	c := &Client{}
+
+	for _, opt := range options {
+		opt(c)
+	}
+
+	if c.httpClient == nil {
+		c.httpClient = getDefaultHTTPClient()
+	}
+
+	return c
 }
 
 // NewClient creates a new telegram Client instance.
+// Deprecated: use NewClientWithOptions instead.
 func NewClient(httpClient HTTPClient) *Client {
-	return &Client{httpClient: httpClient}
+	return NewClientWithOptions(WithHTTPClient(httpClient))
 }
 
 // Client is a tool to communicate with a Telegram API via the HTTPS.
 type Client struct {
 	httpClient HTTPClient
+
+	retryAttempts int
+	retryDelay    time.Duration
 }
 
 // Get sends a GET request to the Telegram API.
@@ -38,7 +58,9 @@ type Client struct {
 func (c *Client) Get(bot *Bot, method string, target any) error {
 	url, urlDebug := getURLs(bot, method)
 
-	resp, err := c.httpClient.Get(url)
+	resp, err := c.doWithRetries(func() (*http.Response, error) {
+		return c.httpClient.Get(url)
+	})
 	if err != nil {
 		return fmt.Errorf("send GET %s: %w", urlDebug, err)
 	}
@@ -65,7 +87,9 @@ func (c *Client) Post(bot *Bot, method string, reqData any, target any) error {
 		return err
 	}
 
-	resp, err := c.httpClient.Post(url, "application/json", reqBody)
+	resp, err := c.doWithRetries(func() (*http.Response, error) {
+		return c.httpClient.Post(url, "application/json", reqBody)
+	})
 	if err != nil {
 		return fmt.Errorf("send POST %s: %w", urlDebug, err)
 	}
@@ -106,6 +130,52 @@ func (c *Client) SendMessage(bot *Bot, msg TgMessageRequest) (*TgMessage, error)
 	return &resp.Result, nil
 }
 
+func (c *Client) doWithRetries(req sendRequestFn) (*http.Response, error) {
+	attempts := c.retryAttempts
+	if attempts <= 0 {
+		attempts = 1
+	}
+
+	delay := c.retryDelay
+	if delay <= 0 {
+		delay = time.Second
+	}
+
+	var (
+		lastResp *http.Response
+		lastErr  error
+	)
+
+	for i := 0; i < attempts; i++ {
+		resp, err := req()
+
+		lastResp = resp
+		lastErr = err
+
+		if err == nil && resp.StatusCode < http.StatusInternalServerError {
+			return resp, nil
+		}
+
+		if err == nil {
+			body, _ := io.ReadAll(resp.Body)
+
+			lastErr = fmt.Errorf(
+				"non-OK response from Telegram API, code %d: %s",
+				resp.StatusCode,
+				string(body),
+			)
+		}
+
+		<-time.After(delay)
+	}
+
+	if lastErr != nil {
+		lastErr = fmt.Errorf("request failed after %d attempts: %w", attempts, lastErr)
+	}
+
+	return lastResp, lastErr
+}
+
 func encodeRequestBody(data any) (io.Reader, error) {
 	encoded, err := jsoniter.Marshal(data)
 	if err != nil {
@@ -122,6 +192,10 @@ func parseResponse(resp *http.Response, target any) (*TgErrorResponse, error) {
 	)
 
 	if resp.Body != nil {
+		defer func() {
+			_ = resp.Body.Close()
+		}()
+
 		body, err = io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, fmt.Errorf("read response body: %w", err)
@@ -149,3 +223,11 @@ func getURLs(bot *Bot, method string) (url string, debug string) {
 	return tgAPIHost + bot.GetIdentity().String() + "/" + method,
 		tgAPIHost + bot.String() + "/" + method
 }
+
+func getDefaultHTTPClient() *http.Client {
+	return &http.Client{
+		Timeout: 30 * time.Second,
+	}
+}
+
+type sendRequestFn func() (*http.Response, error)

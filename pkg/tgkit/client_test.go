@@ -3,6 +3,7 @@ package tgkit_test
 import (
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 	"github.com/stretchr/testify/assert"
@@ -104,7 +105,7 @@ func TestClient_GetMe(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.BotIdentity, func(t *testing.T) {
-			client := tgkit.NewClient(httpClient)
+			client := tgkit.NewClientWithOptions(tgkit.WithHTTPClient(httpClient))
 			bot, err := tgkit.NewBot(test.BotIdentity)
 
 			require.NoError(t, err)
@@ -139,6 +140,12 @@ func TestClient_SendMessage(t *testing.T) {
 			Description: "Not found",
 		},
 	)
+	httpClient.RegisterResponse(
+		http.MethodPost,
+		"https://api.telegram.org/bot3:test3/sendMessage",
+		http.StatusInternalServerError,
+		"Internal Server Error",
+	)
 
 	tests := []struct {
 		BotIdentity string
@@ -165,11 +172,26 @@ func TestClient_SendMessage(t *testing.T) {
 				assert.Nil(t, msg)
 			},
 		},
+		{
+			BotIdentity: "bot3:test3",
+			ChatID:      "1",
+			Text:        "Test 3",
+			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+				assert.Error(t, err)
+				assert.Nil(t, msg)
+				assert.Contains(t, err.Error(), "failed after 2 attempts")
+			},
+		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.BotIdentity, func(t *testing.T) {
-			client := tgkit.NewClient(httpClient)
+			t.Parallel()
+
+			client := tgkit.NewClientWithOptions(
+				tgkit.WithHTTPClient(httpClient),
+				tgkit.WithRetry(2, 50*time.Millisecond),
+			)
 			bot, err := tgkit.NewBot(test.BotIdentity)
 
 			require.NoError(t, err)

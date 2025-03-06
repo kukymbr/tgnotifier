@@ -158,7 +158,7 @@ func TestSender(t *testing.T) {
 				test.SetupClient(t, httpMock)
 			}
 
-			client := tgkit.NewClient(httpMock)
+			client := tgkit.NewClientWithOptions(tgkit.WithHTTPClient(httpMock))
 			service := sender.New(conf, client, msgproc.NewProcessingChain())
 
 			require.NotNil(t, service)

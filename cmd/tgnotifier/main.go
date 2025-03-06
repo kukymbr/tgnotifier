@@ -85,7 +85,7 @@ func getVersionCommandDefinition() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("tgnotifier version: %s\n\n", tgnotifier.Version)
 			fmt.Printf("With gRPC server: %t\n", buildinfo.WithGRPCServer())
-			fmt.Printf("With HTTP server: %t\n", buildinfo.WithGRPCServer())
+			fmt.Printf("With HTTP server: %t\n", buildinfo.WithHTTPServer())
 		},
 	}
 }

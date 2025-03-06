@@ -34,14 +34,14 @@ The gRPC server is also presented in the `tgnotifier` to have it running as a se
 To install the latest release of the `tgnotifier`, 
 download the archive with the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.5.0_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0/tgnotifier_v0.5.0_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.5.0_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0/tgnotifier_v0.5.0_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.6.0_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.6.0_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_windows-latest.zip)
 
 Installation on Ubuntu example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.5.0/tgnotifier_v0.5.0_ubuntu-latest.zip
-unzip tgnotifier_v0.5.0_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.6.0/tgnotifier_v0.6.0_ubuntu-latest.zip
+unzip tgnotifier_v0.6.0_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
@@ -52,7 +52,47 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.5.0
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.6.0
+```
+
+<details>
+  <summary><b>Custom build without some components</b></summary>
+
+There is a possibility to compile a custom build of the `tgnotifier`.
+Golang 1.23 and above is required.
+
+Available since v0.6.0.
+
+```shell
+# Clone the repository:
+git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
+
+# Checkout tag you want to compile:
+git checkout v0.6.0
+
+# To build the tgnotifier with all components:
+make build
+
+# To build the tgnotifier without the gRPC server:
+make build_without_gprc
+
+# To build the tgnotifier without the HTTP server:
+make build_without_http
+
+# To build the tgnotifier without the gRPC and HTTP server both:
+make build_without_servers
+```
+</details>
+
+You could check type of the build by running the `tgnotifier version` command:
+
+```shell
+./tgnotifier version
+
+# tgnotifier version: v0.6.0
+#
+# With gRPC server: true
+# With HTTP server: true
 ```
 
 ### Docker
@@ -185,11 +225,30 @@ Flags:
 
 See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 
+## HTTP server
+
+The tgnotifier could be started as an HTTP server too. 
+To run the server, use the `tgnotifier http` command:
+
+```text
+Usage:
+  tgnotifier http [flags]
+
+Flags:
+      --config string   Path to a config file
+      --debug           Enable the debug mode
+  -h, --help            help for grpc
+  -v, --version         version for grpc
+```
+
+See the [openapi.yaml](api/http/openapi.yaml) for an API contract.
+
 ## TODO
 
-- [ ] Optional user's config file in the home dir.
+- [ ] `tgkit`: support all the Telegram response fields. 
 - [ ] Predefined messages with templates and i18n. 
-- [ ] HTTP server.
+- [x] HTTP server.
+- [x] Optional user's config file in the home dir.
 - [x] gRPC server.
 - [x] Docker configuration.
 - [x] Replace map in config.

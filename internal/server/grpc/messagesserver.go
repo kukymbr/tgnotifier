@@ -1,3 +1,5 @@
+//go:build !no_grpc
+
 package grpc
 
 import (
@@ -42,24 +44,24 @@ func (s *messagesServer) Send(ctx context.Context, req *grpc.SendMessageRequest)
 	}
 
 	return &grpc.SendMessageResponse{
-		Ok: getPtr(true),
+		Ok: true,
 		Result: &grpc.TgMessage{
-			MessageId:       getPtr(int64(tgResp.MessageID)),
-			Date:            getPtr(tgResp.Date),
-			MessageThreadId: getPtr(int64(tgResp.MessageThreadId)),
+			MessageId:       int64(tgResp.MessageID),
+			Date:            tgResp.Date,
+			MessageThreadId: int64(tgResp.MessageThreadId),
 			From: &grpc.TgUser{
-				Id:                      getPtr(tgResp.From.ID),
-				FirstName:               getPtr(tgResp.From.FirstName),
-				LastName:                getPtr(tgResp.From.LastName),
-				Username:                getPtr(tgResp.From.Username),
-				LanguageCode:            getPtr(tgResp.From.LanguageCode),
-				IsBot:                   getPtr(tgResp.From.IsBot),
-				IsPremium:               getPtr(tgResp.From.IsPremium),
-				AddedToAttachmentMenu:   getPtr(tgResp.From.AddedToAttachmentMenu),
-				CanJoinGroups:           getPtr(tgResp.From.CanJoinGroups),
-				CanReadAllGroupMessages: getPtr(tgResp.From.CanReadAllGroupMessages),
-				SupportsInlineQueries:   getPtr(tgResp.From.SupportsInlineQueries),
-				CanConnectToBusiness:    getPtr(tgResp.From.CanConnectToBusiness),
+				Id:                      tgResp.From.ID,
+				FirstName:               tgResp.From.FirstName,
+				LastName:                tgResp.From.LastName,
+				Username:                tgResp.From.Username,
+				LanguageCode:            tgResp.From.LanguageCode,
+				IsBot:                   tgResp.From.IsBot,
+				IsPremium:               tgResp.From.IsPremium,
+				AddedToAttachmentMenu:   tgResp.From.AddedToAttachmentMenu,
+				CanJoinGroups:           tgResp.From.CanJoinGroups,
+				CanReadAllGroupMessages: tgResp.From.CanReadAllGroupMessages,
+				SupportsInlineQueries:   tgResp.From.SupportsInlineQueries,
+				CanConnectToBusiness:    tgResp.From.CanConnectToBusiness,
 			},
 		},
 	}, nil
@@ -98,8 +100,4 @@ func (s *messagesServer) getSendOptions(req *grpc.SendMessageRequest) (types.Sen
 	}
 
 	return opt, nil
-}
-
-func getPtr[T any](val T) *T {
-	return &val
 }

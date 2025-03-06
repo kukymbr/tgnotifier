@@ -34,5 +34,14 @@ replaces:
 
 # gRPC server setup.
 grpc:
+  # Host to listen on.
+  host: 127.0.0.1
+  # Port to listen on.
+  port: 80
+
+# HTTP server setup.
+http:
+  # Host to listen on.
+  host: 127.0.0.1
   # Port to listen on.
   port: 8080

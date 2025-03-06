@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/kukymbr/tgnotifier/internal/server/grpc"
+	"fmt"
+	"github.com/kukymbr/tgnotifier/internal/buildinfo"
 	"os"
+	"os/signal"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
@@ -17,7 +19,9 @@ var (
 )
 
 func main() {
-	ctx := context.Background()
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
 	cmd := getRootCommandDefinition(ctx)
 
 	if err := cmd.ExecuteContext(ctx); err != nil {
@@ -34,8 +38,21 @@ func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 
 	cmd.AddCommand(
 		getSendCommandDefinition(ctx, "send"),
-		getGRPCCommandDefinition(),
+		getVersionCommandDefinition(),
 	)
+
+	servers := [2]*cobra.Command{
+		getGRPCCommandDefinition(),
+		getHTTPCommandDefinition(ctx),
+	}
+
+	for _, serverCmd := range servers {
+		if serverCmd == nil {
+			continue
+		}
+
+		cmd.AddCommand(serverCmd)
+	}
 
 	return cmd
 }
@@ -60,33 +77,17 @@ func getSendCommandDefinition(ctx context.Context, use string) *cobra.Command {
 	return cmd
 }
 
-func getGRPCCommandDefinition() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "grpc",
-		Short:   "tgnotifier gRPC server",
-		Long:    `Starts an gRPC server to send notifications via the Telegram HTTPS API.`,
-		Version: tgnotifier.Version,
-
-		SilenceErrors: true,
-		SilenceUsage:  true,
-
-		RunE: func(cmd *cobra.Command, args []string) error {
-			sendOptions.Normalize()
-
-			ctn, err := tgnotifier.NewDefaultDependencyContainer(genericOptions.ConfigPath)
-			if err != nil {
-				return err
-			}
-
-			server := grpc.New(ctn.Config, ctn.Sender)
-
-			return server.Run()
+func getVersionCommandDefinition() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "tgnotifier version info",
+		Long:  "Prints the tgnotifier version info",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("tgnotifier version: %s\n\n", tgnotifier.Version)
+			fmt.Printf("With gRPC server: %t\n", buildinfo.WithGRPCServer())
+			fmt.Printf("With HTTP server: %t\n", buildinfo.WithHTTPServer())
 		},
 	}
-
-	initGenericFlags(cmd, &genericOptions)
-
-	return cmd
 }
 
 func initSendFlags(cmd *cobra.Command) {

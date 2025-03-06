@@ -7,43 +7,19 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
-	"strings"
 )
 
 const (
+	defaultGRPCHost = "127.0.0.1"
 	defaultGRPCPort = 80
+
+	defaultHTTPHost = "127.0.0.1"
+	defaultHTTPPort = 8080
 )
-
-// SourceReaderFn is a config reader source factory.
-type SourceReaderFn func() (io.ReadCloser, error)
-
-// FromFile is a file config source factory.
-func FromFile(path string) SourceReaderFn {
-	return func() (io.ReadCloser, error) {
-		f, err := os.Open(path)
-		if err != nil {
-			return nil, fmt.Errorf("read config file %s: %w", path, err)
-		}
-
-		return f, nil
-	}
-}
-
-// FromReader is a io.Reader source factory.
-func FromReader(r io.Reader) SourceReaderFn {
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(r), nil
-	}
-}
-
-// FromString is a string config source factory.
-func FromString(s string) SourceReaderFn {
-	return FromReader(strings.NewReader(s))
-}
 
 // NewConfig reads config from the file if existing file given,
 // and from the env if values are presented.
-func NewConfig(readerFactory ...SourceReaderFn) (*Config, error) {
+func NewConfig(readerFactory ...SourceReaderFactory) (*Config, error) {
 	var (
 		conf   = &Config{}
 		reader io.ReadCloser
@@ -55,7 +31,9 @@ func NewConfig(readerFactory ...SourceReaderFn) (*Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to create config reader: %w", err)
 		}
+	}
 
+	if reader != nil {
 		defer func() {
 			_ = reader.Close()
 		}()
@@ -124,8 +102,13 @@ func newConfigFromReader(inp io.Reader) (*Config, error) {
 	}
 
 	conf.replaces = raw.Replaces
-	conf.grpc = GRPCServerConfig{
+	conf.grpc = ServerConfig{
+		host: raw.GRPC.Host,
 		port: raw.GRPC.Port,
+	}
+	conf.http = ServerConfig{
+		host: raw.HTTP.Host,
+		port: raw.HTTP.Port,
 	}
 
 	return conf, nil
@@ -144,9 +127,8 @@ func setupConfigValues(conf *Config) error {
 		return fmt.Errorf("no chats registered in config file or env")
 	}
 
-	if conf.grpc.port == 0 {
-		conf.grpc.port = defaultGRPCPort
-	}
+	setServerDefaults(&conf.grpc, defaultGRPCHost, defaultGRPCPort)
+	setServerDefaults(&conf.http, defaultHTTPHost, defaultHTTPPort)
 
 	return nil
 }
@@ -197,4 +179,14 @@ func parseTimeSchedule(raw []silenceScheduleItem) (*types.TimeSchedule, error) {
 	}
 
 	return schedule, nil
+}
+
+func setServerDefaults(conf *ServerConfig, defaultHost string, defaultPort int) {
+	if conf.host == "" {
+		conf.host = defaultHost
+	}
+
+	if conf.port == 0 {
+		conf.port = defaultPort
+	}
 }

@@ -25,7 +25,10 @@ const (
 // MessagesClient is the client API for Messages service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Messages is a service to handle the send messages requests.
 type MessagesClient interface {
+	// Send message via the Telegram API.
 	Send(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
 
@@ -50,7 +53,10 @@ func (c *messagesClient) Send(ctx context.Context, in *SendMessageRequest, opts 
 // MessagesServer is the server API for Messages service.
 // All implementations must embed UnimplementedMessagesServer
 // for forward compatibility.
+//
+// Messages is a service to handle the send messages requests.
 type MessagesServer interface {
+	// Send message via the Telegram API.
 	Send(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	mustEmbedUnimplementedMessagesServer()
 }

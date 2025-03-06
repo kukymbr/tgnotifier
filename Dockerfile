@@ -10,8 +10,6 @@ COPY ../../go.mod ../../go.sum ./
 RUN go mod download
 
 COPY ../../ .
-
-RUN go generate ./cmd/tgnotifier
 RUN go build ./cmd/tgnotifier
 
 FROM alpine:3.8

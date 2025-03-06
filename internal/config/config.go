@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
+	"net"
+	"strconv"
 )
 
 const (
@@ -23,7 +25,8 @@ type Config struct {
 
 	replaces map[string]string
 
-	grpc GRPCServerConfig
+	grpc ServerConfig
+	http ServerConfig
 }
 
 // Bots - returns registered bots index.
@@ -64,8 +67,14 @@ func (c *Config) Replaces() map[string]string {
 	return c.replaces
 }
 
-func (c *Config) GRPC() GRPCServerConfig {
+// GRPC returns configuration of the gRPC server.
+func (c *Config) GRPC() ServerConfig {
 	return c.grpc
+}
+
+// HTTP returns configuration of the HTTP server.
+func (c *Config) HTTP() ServerConfig {
+	return c.http
 }
 
 func (c *Config) init() {
@@ -104,10 +113,19 @@ func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
 	return chatID, nil
 }
 
-type GRPCServerConfig struct {
+type ServerConfig struct {
+	host string
 	port int
 }
 
-func (c GRPCServerConfig) GetPort() int {
+func (c ServerConfig) GetAddress() string {
+	return net.JoinHostPort(c.GetHost(), strconv.Itoa(c.GetPort()))
+}
+
+func (c ServerConfig) GetHost() string {
+	return c.host
+}
+
+func (c ServerConfig) GetPort() int {
 	return c.port
 }

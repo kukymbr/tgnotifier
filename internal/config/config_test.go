@@ -78,7 +78,8 @@ func TestNewConfig(t *testing.T) {
 				assert.NotNil(t, replaces)
 				assert.Len(t, replaces, 0)
 
-				assert.Equal(t, conf.GRPC().GetPort(), 80)
+				assert.Equal(t, conf.GRPC().GetAddress(), "127.0.0.1:80")
+				assert.Equal(t, conf.HTTP().GetAddress(), "127.0.0.1:8080")
 			},
 		},
 		{
@@ -218,11 +219,7 @@ func TestNewConfig(t *testing.T) {
 				err  error
 			)
 
-			if test.ConfigFile != "" {
-				conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
-			} else {
-				conf, err = config.NewConfig()
-			}
+			conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
 
 			test.Assert(t, conf, err)
 		})

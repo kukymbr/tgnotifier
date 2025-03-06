@@ -23,10 +23,14 @@ const (
 )
 
 type SendMessageRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	BotName       string                 `protobuf:"bytes,1,opt,name=bot_name,proto3" json:"bot_name,omitempty"`
-	ChatName      string                 `protobuf:"bytes,2,opt,name=chat_name,proto3" json:"chat_name,omitempty"`
-	Message       *MessageRequest        `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// bot_name is a name of the bot from the tgnotifier config;
+	// could be omitted to send message from a bot, defined as a default.
+	BotName string `protobuf:"bytes,1,opt,name=bot_name,proto3" json:"bot_name,omitempty"`
+	// chat_name name of the chat from the tgnotifier config;
+	// could be omitted to send message to a chat, defined as a default.
+	ChatName      string          `protobuf:"bytes,2,opt,name=chat_name,proto3" json:"chat_name,omitempty"`
+	Message       *MessageRequest `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -83,13 +87,18 @@ func (x *SendMessageRequest) GetMessage() *MessageRequest {
 }
 
 type MessageRequest struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Text                string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
-	ParseMode           string                 `protobuf:"bytes,2,opt,name=parse_mode,proto3" json:"parse_mode,omitempty"`
-	DisableNotification bool                   `protobuf:"varint,3,opt,name=disable_notification,proto3" json:"disable_notification,omitempty"`
-	ProtectContent      bool                   `protobuf:"varint,4,opt,name=protect_content,proto3" json:"protect_content,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Message text content.
+	Text string `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	// Text parsing mode (MarkdownV2|HTML).
+	// See API doc for more info: https://core.telegram.org/bots/api#formatting-options
+	ParseMode string `protobuf:"bytes,2,opt,name=parse_mode,proto3" json:"parse_mode,omitempty"`
+	// Send message without a notification.
+	DisableNotification bool `protobuf:"varint,3,opt,name=disable_notification,proto3" json:"disable_notification,omitempty"`
+	// Restrict message forwarding and copying.
+	ProtectContent bool `protobuf:"varint,4,opt,name=protect_content,proto3" json:"protect_content,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *MessageRequest) Reset() {
@@ -202,6 +211,8 @@ func (x *SendMessageResponse) GetResult() *TgMessage {
 	return nil
 }
 
+// TgMessage is a sent message object, returned from the Telegram API.
+// See doc for fields reference: https://core.telegram.org/bots/api#message
 type TgMessage struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	MessageId       int64                  `protobuf:"varint,1,opt,name=message_id,proto3" json:"message_id,omitempty"`

@@ -9,11 +9,11 @@ import (
 
 func (s *grpcTestSuite) TestSendMessage() {
 	resp, err := s.messagesClient.Send(context.Background(), &grpc.SendMessageRequest{
-		BotName:  &s.botName,
-		ChatName: &s.chatName,
+		BotName:  s.botName,
+		ChatName: s.chatName,
 		Message: &grpc.MessageRequest{
-			Text:                getPtr("😎 test_message"),
-			DisableNotification: getPtr(true),
+			Text:                "😎 test_message",
+			DisableNotification: true,
 		},
 	})
 
@@ -22,8 +22,4 @@ func (s *grpcTestSuite) TestSendMessage() {
 
 	s.True(resp.GetOk())
 	s.True(resp.GetResult().GetFrom().GetIsBot())
-}
-
-func getPtr[T any](val T) *T {
-	return &val
 }

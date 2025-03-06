@@ -11,8 +11,12 @@ all:
 generate:
 	go generate ./cmd/tgnotifier
 
-proto:
-	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative
+install_tools:
+	go install ./...
+
+apis:
+	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/
+	oapi-codegen --config=./api/http/oapi.config.yml ./api/http/openapi.yaml
 
 tidy:
 	go mod tidy

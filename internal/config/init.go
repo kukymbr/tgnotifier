@@ -10,7 +10,11 @@ import (
 )
 
 const (
+	defaultGRPCHost = "127.0.0.1"
 	defaultGRPCPort = 80
+
+	defaultHTTPHost = "127.0.0.1"
+	defaultHTTPPort = 8080
 )
 
 // NewConfig reads config from the file if existing file given,
@@ -98,8 +102,13 @@ func newConfigFromReader(inp io.Reader) (*Config, error) {
 	}
 
 	conf.replaces = raw.Replaces
-	conf.grpc = GRPCServerConfig{
+	conf.grpc = ServerConfig{
+		host: raw.GRPC.Host,
 		port: raw.GRPC.Port,
+	}
+	conf.http = ServerConfig{
+		host: raw.HTTP.Host,
+		port: raw.HTTP.Port,
 	}
 
 	return conf, nil
@@ -118,9 +127,8 @@ func setupConfigValues(conf *Config) error {
 		return fmt.Errorf("no chats registered in config file or env")
 	}
 
-	if conf.grpc.port == 0 {
-		conf.grpc.port = defaultGRPCPort
-	}
+	setServerDefaults(&conf.grpc, defaultGRPCHost, defaultGRPCPort)
+	setServerDefaults(&conf.http, defaultHTTPHost, defaultHTTPPort)
 
 	return nil
 }
@@ -171,4 +179,14 @@ func parseTimeSchedule(raw []silenceScheduleItem) (*types.TimeSchedule, error) {
 	}
 
 	return schedule, nil
+}
+
+func setServerDefaults(conf *ServerConfig, defaultHost string, defaultPort int) {
+	if conf.host == "" {
+		conf.host = defaultHost
+	}
+
+	if conf.port == 0 {
+		conf.port = defaultPort
+	}
 }

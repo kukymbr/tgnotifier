@@ -185,10 +185,29 @@ Flags:
 
 See the [tgnotifier.proto](api/grpc/tgnotifier.proto) for an API contract.
 
+## HTTP server
+
+The tgnotifier could be started as an HTTP server too. 
+To run the server, use the `tgnotifier http` command:
+
+```text
+Usage:
+  tgnotifier http [flags]
+
+Flags:
+      --config string   Path to a config file
+      --debug           Enable the debug mode
+  -h, --help            help for grpc
+  -v, --version         version for grpc
+```
+
+See the [openapi.yaml](api/http/openapi.yaml) for an API contract.
+
 ## TODO
 
+- [ ] `tgkit`: support all the Telegram response fields. 
 - [ ] Predefined messages with templates and i18n. 
-- [ ] HTTP server.
+- [x] HTTP server.
 - [x] Optional user's config file in the home dir.
 - [x] gRPC server.
 - [x] Docker configuration.

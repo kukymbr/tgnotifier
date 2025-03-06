@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"github.com/kukymbr/tgnotifier/internal/server/grpc"
+	"github.com/kukymbr/tgnotifier/internal/server/http"
 	"os"
+	"os/signal"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
@@ -17,7 +19,9 @@ var (
 )
 
 func main() {
-	ctx := context.Background()
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
 	cmd := getRootCommandDefinition(ctx)
 
 	if err := cmd.ExecuteContext(ctx); err != nil {
@@ -35,6 +39,7 @@ func getRootCommandDefinition(ctx context.Context) *cobra.Command {
 	cmd.AddCommand(
 		getSendCommandDefinition(ctx, "send"),
 		getGRPCCommandDefinition(),
+		getHTTPCommandDefinition(ctx),
 	)
 
 	return cmd
@@ -71,7 +76,7 @@ func getGRPCCommandDefinition() *cobra.Command {
 		SilenceUsage:  true,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
-			sendOptions.Normalize()
+			genericOptions.Normalize()
 
 			ctn, err := tgnotifier.NewDefaultDependencyContainer(genericOptions.ConfigPath)
 			if err != nil {
@@ -81,6 +86,33 @@ func getGRPCCommandDefinition() *cobra.Command {
 			server := grpc.New(ctn.Config, ctn.Sender)
 
 			return server.Run()
+		},
+	}
+
+	initGenericFlags(cmd, &genericOptions)
+
+	return cmd
+}
+
+func getHTTPCommandDefinition(ctx context.Context) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "http",
+		Short:   "tgnotifier HTTP server",
+		Long:    `Starts an HTTP server to send notifications via the Telegram HTTPS API.`,
+		Version: tgnotifier.Version,
+
+		SilenceErrors: true,
+		SilenceUsage:  true,
+
+		RunE: func(cmd *cobra.Command, args []string) error {
+			genericOptions.Normalize()
+
+			ctn, err := tgnotifier.NewDefaultDependencyContainer(genericOptions.ConfigPath)
+			if err != nil {
+				return err
+			}
+
+			return http.RunServer(ctx, ctn.Config, ctn.Sender)
 		},
 	}
 

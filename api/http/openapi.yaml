@@ -1,0 +1,96 @@
+openapi: 3.1.0
+info:
+  title: ""
+  version: ""
+paths:
+  /api/v1/messages/send:
+    post:
+      operationId: send
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        required: true
+      responses:
+        "200":
+          description: tgnotifier.Messages.Send response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
+components:
+  schemas:
+    MessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        parse_mode:
+          type: string
+        disable_notification:
+          type: boolean
+        protect_content:
+          type: boolean
+      required:
+        - text
+    SendMessageRequest:
+      type: object
+      properties:
+        bot_name:
+          type: string
+        chat_name:
+          type: string
+        message:
+          $ref: '#/components/schemas/MessageRequest'
+      required:
+        - message
+    SendMessageResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/TgMessage'
+    TgMessage:
+      type: object
+      properties:
+        message_id:
+          type: integer
+          format: int64
+        date:
+          type: integer
+          format: uint64
+        message_thread_id:
+          type: integer
+          format: int64
+        from:
+          $ref: '#/components/schemas/TgUser'
+    TgUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        language_code:
+          type: string
+        is_bot:
+          type: boolean
+        is_premium:
+          type: boolean
+        added_to_attachment_menu:
+          type: boolean
+        can_join_groups:
+          type: boolean
+        can_read_all_group_messages:
+          type: boolean
+        supports_inline_queries:
+          type: boolean
+        can_connect_to_business:
+          type: boolean

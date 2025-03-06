@@ -15,7 +15,8 @@ type configDTO struct {
 
 	Replaces map[string]string `json:"replaces" yaml:"replaces"`
 
-	GRPC grpcServerConfigDTO `json:"grpc" yaml:"grpc"`
+	GRPC serverConfigDTO `json:"grpc" yaml:"grpc"`
+	HTTP serverConfigDTO `json:"http" yaml:"http"`
 }
 
 type silenceScheduleItem struct {
@@ -23,6 +24,7 @@ type silenceScheduleItem struct {
 	To   string `json:"to" yaml:"to"`
 }
 
-type grpcServerConfigDTO struct {
-	Port int `json:"port" yaml:"port"`
+type serverConfigDTO struct {
+	Host string `json:"host" yaml:"host"`
+	Port int    `json:"port" yaml:"port"`
 }

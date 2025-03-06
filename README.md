@@ -59,7 +59,7 @@ go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.1
   <summary><b>Custom build without some components</b></summary>
 
 There is a possibility to compile a custom build of the `tgnotifier`.
-Golang 1.23 and above is required.
+Golang 1.24 and above is required.
 
 Available since v0.7.1.
 

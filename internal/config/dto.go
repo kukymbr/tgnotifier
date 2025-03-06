@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/kukymbr/tgnotifier/internal/types"
+	"time"
 )
 
 type configDTO struct {
@@ -15,6 +16,9 @@ type configDTO struct {
 
 	Replaces map[string]string `json:"replaces" yaml:"replaces"`
 
+	Client  clientConfigDTO  `json:"client" yaml:"client"`
+	Retrier retrierConfigDTO `json:"retrier" yaml:"retrier"`
+
 	GRPC serverConfigDTO `json:"grpc" yaml:"grpc"`
 	HTTP serverConfigDTO `json:"http" yaml:"http"`
 }
@@ -27,4 +31,15 @@ type silenceScheduleItem struct {
 type serverConfigDTO struct {
 	Host string `json:"host" yaml:"host"`
 	Port int    `json:"port" yaml:"port"`
+}
+
+type retrierConfigDTO struct {
+	Type       string        `json:"type" yaml:"type"`
+	Attempts   uint          `json:"attempts,omitempty" yaml:"attempts,omitempty"`
+	Delay      time.Duration `json:"delay,omitempty" yaml:"delay,omitempty"`
+	Multiplier float64       `json:"multiplier,omitempty" yaml:"multiplier,omitempty"`
+}
+
+type clientConfigDTO struct {
+	Timeout time.Duration `json:"timeout" yaml:"timeout"`
 }

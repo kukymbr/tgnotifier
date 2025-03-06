@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
+	"time"
 )
 
 const (
@@ -15,6 +16,8 @@ const (
 
 	defaultHTTPHost = "127.0.0.1"
 	defaultHTTPPort = 8080
+
+	defaultClientTimeout = 30 * time.Second
 )
 
 // NewConfig reads config from the file if existing file given,
@@ -101,6 +104,15 @@ func newConfigFromReader(inp io.Reader) (*Config, error) {
 		return nil, fmt.Errorf("parse silence schedule from config: %w", err)
 	}
 
+	conf.retrier, err = newRetrier(raw.Retrier)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize request retrier from config: %w", err)
+	}
+
+	conf.client = ClientConfig{
+		timeout: raw.Client.Timeout,
+	}
+
 	conf.replaces = raw.Replaces
 	conf.grpc = ServerConfig{
 		host: raw.GRPC.Host,
@@ -129,6 +141,14 @@ func setupConfigValues(conf *Config) error {
 
 	setServerDefaults(&conf.grpc, defaultGRPCHost, defaultGRPCPort)
 	setServerDefaults(&conf.http, defaultHTTPHost, defaultHTTPPort)
+
+	if conf.retrier == nil {
+		conf.retrier = tgkit.NewProgressiveRetrier(3, 500*time.Millisecond, 2)
+	}
+
+	if conf.client.timeout <= 0 {
+		conf.client.timeout = defaultClientTimeout
+	}
 
 	return nil
 }
@@ -189,4 +209,17 @@ func setServerDefaults(conf *ServerConfig, defaultHost string, defaultPort int) 
 	if conf.port == 0 {
 		conf.port = defaultPort
 	}
+}
+
+func newRetrier(dto retrierConfigDTO) (tgkit.RequestRetrier, error) {
+	switch dto.Type {
+	case "noop", "":
+		return tgkit.NewNoopRetrier(), nil
+	case "linear":
+		return tgkit.NewLinearRetrier(dto.Attempts, dto.Delay), nil
+	case "progressive":
+		return tgkit.NewProgressiveRetrier(dto.Attempts, dto.Delay, dto.Multiplier), nil
+	}
+
+	return nil, fmt.Errorf("unknown retrier type: %s", dto.Type)
 }

@@ -57,7 +57,12 @@ func (r *progressiveRetrier) Do(reqFn sendRequestFn) (*http.Response, error) {
 			return r.initialDelay
 		}
 
-		return r.initialDelay * time.Duration(float64(attemptN)*r.multiplier)
+		multiplier := r.multiplier
+		if multiplier <= 0.001 {
+			multiplier = 1
+		}
+
+		return r.initialDelay * time.Duration(float64(attemptN)*multiplier)
 	})
 }
 

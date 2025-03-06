@@ -1,0 +1,9 @@
+bots:
+  first_bot: "12345:FIRST_BOT_TOKEN"
+
+chats:
+  main_chat: "-12345"
+  secondary_chat: "@my_test_channel"
+
+retrier:
+  type: invalid

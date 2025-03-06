@@ -5,6 +5,7 @@ import (
 	"github.com/kukymbr/tgnotifier/internal/msgproc"
 	"github.com/kukymbr/tgnotifier/internal/sender"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
+	"net/http"
 )
 
 // NewDefaultDependencyContainer builds new default DependencyContainer.
@@ -15,7 +16,13 @@ func NewDefaultDependencyContainer(configFilePath string) (DependencyContainer, 
 		return DependencyContainer{}, err
 	}
 
-	client := tgkit.NewDefaultClient()
+	client := tgkit.NewClientWithOptions(
+		tgkit.WithHTTPClient(&http.Client{
+			Timeout: conf.Client().GetTimeout(),
+		}),
+		tgkit.WithRetrier(conf.GetRequestRetrier()),
+	)
+
 	proc := msgproc.NewProcessingChain(
 		msgproc.NewTextNormalizer(),
 		msgproc.NewReplacer(conf.Replaces()),

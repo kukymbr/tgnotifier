@@ -80,6 +80,9 @@ func TestNewConfig(t *testing.T) {
 
 				assert.Equal(t, conf.GRPC().GetAddress(), "127.0.0.1:80")
 				assert.Equal(t, conf.HTTP().GetAddress(), "127.0.0.1:8080")
+
+				assert.NotNil(t, conf.GetRequestRetrier())
+				assert.Equal(t, 30*time.Second, conf.Client().GetTimeout())
 			},
 		},
 		{
@@ -114,6 +117,12 @@ func TestNewConfig(t *testing.T) {
 				)
 
 				assert.Len(t, conf.Replaces(), 1)
+
+				assert.Equal(t, conf.GRPC().GetAddress(), "127.0.0.1:4080")
+				assert.Equal(t, conf.HTTP().GetAddress(), "127.0.0.1:4081")
+
+				assert.NotNil(t, conf.GetRequestRetrier())
+				assert.Equal(t, 31*time.Second, conf.Client().GetTimeout())
 			},
 		},
 		{
@@ -193,6 +202,14 @@ func TestNewConfig(t *testing.T) {
 		{
 			Name:       "With invalid file (broken schedule)",
 			ConfigFile: "./testdata/.tgnotifier.invalid.schedule.yml",
+			Assert: func(t *testing.T, conf *config.Config, err error) {
+				assert.Error(t, err)
+				assert.Nil(t, conf)
+			},
+		},
+		{
+			Name:       "With invalid file (unknown retrier)",
+			ConfigFile: "./testdata/.tgnotifier.invalid.retrier.yml",
 			Assert: func(t *testing.T, conf *config.Config, err error) {
 				assert.Error(t, err)
 				assert.Nil(t, conf)

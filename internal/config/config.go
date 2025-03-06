@@ -6,6 +6,7 @@ import (
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 	"net"
 	"strconv"
+	"time"
 )
 
 const (
@@ -27,6 +28,9 @@ type Config struct {
 
 	grpc ServerConfig
 	http ServerConfig
+
+	client  ClientConfig
+	retrier tgkit.RequestRetrier
 }
 
 // Bots - returns registered bots index.
@@ -67,6 +71,11 @@ func (c *Config) Replaces() map[string]string {
 	return c.replaces
 }
 
+// Client returns Telegram API client configuration.
+func (c *Config) Client() ClientConfig {
+	return c.client
+}
+
 // GRPC returns configuration of the gRPC server.
 func (c *Config) GRPC() ServerConfig {
 	return c.grpc
@@ -75,6 +84,11 @@ func (c *Config) GRPC() ServerConfig {
 // HTTP returns configuration of the HTTP server.
 func (c *Config) HTTP() ServerConfig {
 	return c.http
+}
+
+// GetRequestRetrier returns tgkit.RequestRetrier instance.
+func (c *Config) GetRequestRetrier() tgkit.RequestRetrier {
+	return c.retrier
 }
 
 func (c *Config) init() {
@@ -128,4 +142,12 @@ func (c ServerConfig) GetHost() string {
 
 func (c ServerConfig) GetPort() int {
 	return c.port
+}
+
+type ClientConfig struct {
+	timeout time.Duration
+}
+
+func (c ClientConfig) GetTimeout() time.Duration {
+	return c.timeout
 }

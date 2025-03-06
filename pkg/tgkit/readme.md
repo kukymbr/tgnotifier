@@ -12,4 +12,4 @@ Use `go get` to add it to the project:
 go get github.com/kukymbr/tgnotifier
 ```
 
-See the godoc for the reference: [pkg.go.dev](https://pkg.go.dev/github.com/kukymbr/tgnotifier@v0.7.0/pkg/tgkit)
+See the godoc for the reference: [pkg.go.dev](https://pkg.go.dev/github.com/kukymbr/tgnotifier@v0.7.1/pkg/tgkit)

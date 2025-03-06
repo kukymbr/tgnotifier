@@ -34,14 +34,14 @@ The gRPC server is also presented in the `tgnotifier` to have it running as a se
 To install the latest release of the `tgnotifier`, 
 download the archive with the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.7.0_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.0/tgnotifier_v0.7.0_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.7.0_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.0/tgnotifier_v0.7.0_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.7.1_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_ubuntu-latest.zip)
+* Windows: [tgnotifier_v0.7.1_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_windows-latest.zip)
 
 Installation on Ubuntu example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.0/tgnotifier_v0.7.0_ubuntu-latest.zip
-unzip tgnotifier_v0.7.0_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_ubuntu-latest.zip
+unzip tgnotifier_v0.7.1_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
@@ -52,7 +52,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.0
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.1
 ```
 
 <details>
@@ -61,14 +61,14 @@ go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.0
 There is a possibility to compile a custom build of the `tgnotifier`.
 Golang 1.23 and above is required.
 
-Available since v0.7.0.
+Available since v0.7.1.
 
 ```shell
 # Clone the repository:
 git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
 
 # Checkout tag you want to compile:
-git checkout v0.7.0
+git checkout v0.7.1
 
 # To build the tgnotifier with all components:
 make build
@@ -89,7 +89,7 @@ You could check type of the build by running the `tgnotifier version` command:
 ```shell
 ./tgnotifier version
 
-# tgnotifier version: v0.7.0
+# tgnotifier version: v0.7.1
 #
 # With gRPC server: true
 # With HTTP server: true
@@ -151,6 +151,32 @@ replaces:
   "@test": "[Test](tg://user?id=123456789)"
   "FYI": "for your information"
 ```
+
+<details>
+<summary>Some other configuration options:</summary>
+
+```yaml
+# Telegram API client configuration.
+client:
+  # Telegram API requests timeout.
+  timeout: 30s
+
+# Failed requests (500 responses, timeouts, protocol errors) retrier options.
+retrier:
+  # Type of the retrier.
+  # Available:
+  #  - noop: just single attempt, no retries;
+  #  - linear: fixed retry delay, `attempts` and `delay` fields are used;
+  #  - progressive: increasing retry delay, `attempts`, `delay` and `multiplier` fields are used.
+  type: progressive
+  # Maximum count of attempts.
+  attempts: 3
+  # Delay between an attempts, or initial delay in case of a progressive retrier.
+  delay: 500ms
+  # Delay multiplier for a progressive retrier.
+  multiplier: 2
+```
+</details>
 
 To run `tgnotifier` without the config file at all,
 define the env vars with default bot credentials and chat ID:

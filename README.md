@@ -110,6 +110,31 @@ See the [docker/compose.yml](docker/compose.yml) file for a docker compose usage
 The `tgnotifier` could have a configuration file to use multiple bots and chats.
 See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available values.
 
+Use one of these ways to define a `tgnotifier` configuration:
+
+* Create a file named `.tgnotifier.yml` in the user's home or config dir,
+  `tgnotifier` will use it if no explicit config file passed as argument:
+  ```shell
+  nano "$HOME/.config/.tgnotifier.yml" # Define a config values...
+  tgnotifer --text="🤠" 
+  ```
+* Or create an YAML of JSON file in any location you want and give its path to the `tgnotifier`:
+  ```shell
+  tgnotifier --config="/path/to/config.yml" --text="🎉"
+  ```
+* Or use a minimal configuration mode (just single bot and chat) using the environment variables:
+  ```shell
+  export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
+  export TGNOTIFIER_DEFAULT_CHAT="-12345"
+  
+  tgnotifer --text="🔥" 
+  ```
+
+### Configuration values
+
+Put variables below to your configuration file to make `tgnnotifier` run in your way.
+Examples are provided in YAML format, but JSON files are supported too.
+
 Defining the bots, who can send messages via the `tgnotifier`:
 
 ```yaml

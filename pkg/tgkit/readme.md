@@ -3,8 +3,10 @@
 The `tgkit` is a library that covers needs of the `tgnotifier`
 with a Telegram API communications.
 
-If this small model of the Telegram API somehow suitable to your case, 
+If this little model of the Telegram API somehow suitable to your case, 
 fill free to use it as a library.
+However, if you require comprehensive mappings to the Telegram API, 
+it might be more suitable to use one of the fancy libraries that provide these.
 
 ## Usage
 

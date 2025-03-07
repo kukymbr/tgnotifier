@@ -13,7 +13,7 @@ via the Telegram API.
 ## Okay, but why?
 
 The main feature of the `tgnotifier` is in the configuration, 
-you could define bots and chats and just send the messages, just like this: 
+you could define bots and chats once and just send the messages, just like this: 
 
 ```shell
 tgnotifier send --text="😎 my cool message"
@@ -27,7 +27,7 @@ tgnotifier send --text="🦖 my the most coolest message" --bot="cool_messages_b
 
 One of the cases when you may want to use `tgnotifier` is an alerting from the CI/CD or some other services
 via the single entrypoint without exposing the bot credentials in every service or configuration. 
-The gRPC server is also presented in the `tgnotifier` to have it running as a service.
+The gRPC and HTTP servers are also presented in the `tgnotifier` to have it running as a service.
 
 ## Installation
 
@@ -44,8 +44,6 @@ wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v
 unzip tgnotifier_v0.7.1_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
-
-> The `--version` flag is supported since the v0.3.2 version.
 
 ### Compile from sources
 

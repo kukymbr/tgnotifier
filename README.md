@@ -82,17 +82,6 @@ make build_without_servers
 ```
 </details>
 
-You could check type of the build by running the `tgnotifier version` command:
-
-```shell
-./tgnotifier version
-
-# tgnotifier version: v0.7.1
-#
-# With gRPC server: true
-# With HTTP server: true
-```
-
 ### Docker
 
 There is a Docker configuration for a `tgnotifier`.
@@ -113,6 +102,7 @@ See the [.tgnotifier.example.yml](.tgnotifier.example.yml) for an available valu
 Use one of these ways to define a `tgnotifier` configuration:
 
 * Create a file named `.tgnotifier.yml` in the user's home or config dir,
+  or near the `tgnotifier` executable file,
   `tgnotifier` will use it if no explicit config file passed as argument:
   ```shell
   nano "$HOME/.config/.tgnotifier.yml" # Define a config values...
@@ -230,12 +220,18 @@ Flags:
 
 ### Command execution examples
 
-Send a "Hello, World!" message from the default bot to the default chat:
+Send a "Hello, World!" message from the default bot to the default chat, defined by the environment variables:
 
 ```shell
 export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
 export TGNOTIFIER_DEFAULT_CHAT="-12345"
 
+tgnotifier --text="Hello, World!"
+```
+
+Send a "Hello, World!" message from the default bot to the default chat, defined in the config file:
+
+```shell
 tgnotifier --text="Hello, World!"
 ```
 

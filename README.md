@@ -45,13 +45,15 @@ unzip tgnotifier_v0.7.1_ubuntu-latest.zip -d /usr/local/bin/
 tgnotifier --version
 ```
 
-### Compile from sources
+<details>
+  <summary><b>Compile from sources</b></summary>
 
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
 go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.1
 ```
+</details>
 
 <details>
   <summary><b>Custom build without some components</b></summary>
@@ -166,7 +168,7 @@ replaces:
 ```
 
 <details>
-<summary>Some other configuration options:</summary>
+<summary><b>Some other configuration options</b></summary>
 
 ```yaml
 # Telegram API client configuration.
@@ -198,6 +200,17 @@ define the env vars with default bot credentials and chat ID:
 export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"
 export TGNOTIFIER_DEFAULT_CHAT="-12345"
 ```
+
+<details>
+  <summary><b>Where can I get a bot identifier and chat ID?</b></summary>
+
+1. See the [Telegram Bot API tutorial](https://core.telegram.org/bots/tutorial#obtain-your-bot-token) 
+to find out how to obtain a bot token.
+2. Getting the chat ID is little more tricky, you need to add bot to a required chat, send there a message
+   and request the `getUpdates` Telegram API endpoint, 
+   see [this doc](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a#get-chat-id-for-a-private-chat)
+   for an example.
+</details>
 
 ## CLI tool usage
 

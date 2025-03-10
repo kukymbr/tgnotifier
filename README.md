@@ -165,6 +165,7 @@ Defining substrings to replace in the message texts:
 replaces:
   "@test": "[Test](tg://user?id=123456789)"
   "FYI": "for your information"
+  "{{ failed }}": "Pipeline job has failed" 
 ```
 
 <details>

@@ -194,7 +194,7 @@ retrier:
 ```
 </details>
 
-To run `tgnotifier` without the config file at all,
+To run `tgnotifier` without a config file at all,
 define the env vars with default bot credentials and chat ID:
 
 ```shell

@@ -32,16 +32,18 @@ The gRPC and HTTP servers are also presented in the `tgnotifier` to have it runn
 ## Installation
 
 To install the latest release of the `tgnotifier`, 
-download the archive with the binary for your OS and unpack it somewhere inside the PATH.
+download the binary for your OS and unpack it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.7.1_ubuntu-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_ubuntu-latest.zip)
-* Windows: [tgnotifier_v0.7.1_windows-latest.zip](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_windows-latest.zip)
+* Ubuntu/Debian: [tgnotifier_v0.7.2_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_ubuntu-latest)
+* macOS: [tgnotifier_v0.7.2_macOS-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_macOS-latest)
+* Windows: [tgnotifier_v0.7.2_windows-latest.exe](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_windows-latest.exe)
 
-Installation on Ubuntu example:
+Installation on Ubuntu/macOS example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.1/tgnotifier_v0.7.1_ubuntu-latest.zip
-unzip tgnotifier_v0.7.1_ubuntu-latest.zip -d /usr/local/bin/
+wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_ubuntu-latest
+chmod a+x tgnotifier_v0.7.2_ubuntu-latest 
+mv tgnotifier_v0.7.2_ubuntu-latest /usr/local/bin/tgnotifier
 tgnotifier --version
 ```
 
@@ -51,7 +53,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.1
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.2
 ```
 </details>
 
@@ -68,7 +70,7 @@ Available since v0.7.1.
 git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
 
 # Checkout tag you want to compile:
-git checkout v0.7.1
+git checkout v0.7.2
 
 # To build the tgnotifier with all components:
 make build
@@ -88,26 +90,26 @@ make build_without_servers
   <summary><b>Docker configuration</b></summary>
 
 Docker image: 
-[ghcr.io/kukymbr/tgnotifier:0.7.1](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/369286829).
+[ghcr.io/kukymbr/tgnotifier:0.7.2](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/369286829).
 
 #### Docker usage examples
 
 Sending message without a configuration file:
 
 ```shell
-docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.7.1 send --text="what's up?"
+docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.7.2 send --text="what's up?"
 ```
 
 Sending message with a configuration file:
 
 ```shell
-docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.1 send --text="what's up?"
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.2 send --text="what's up?"
 ```
 
 Starting a gRPC server:
 
 ```shell
-docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.1 grpc
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.2 grpc
 ```
 
 Using as a docker compose service:
@@ -115,7 +117,7 @@ Using as a docker compose service:
 ```yaml
 services:
   tgnotifier:
-    image: ghcr.io/kukymbr/tgnotifier:0.7.1
+    image: ghcr.io/kukymbr/tgnotifier:0.7.2
     volumes:
       - /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml
     ports:

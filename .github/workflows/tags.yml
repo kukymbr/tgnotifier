@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 env:
-  ARTIFACT_NAME: tgnotifier_${{ github.ref_name }}_${{ matrix.os }}
+  ARTIFACT_NAME: tgnotifier_dist
   EXECUTABLE_NAME: tgnotifier
   EXECUTABLE_NAME_WINDOWS: tgnotifier.exe
   GO_VERSION: '1.24'

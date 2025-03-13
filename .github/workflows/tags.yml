@@ -60,15 +60,17 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: dist
+          path: ${{ github.workspace }}
           pattern: tgnotifier_${{ github.ref_name }}_*
           merge-multiple: true
+
+      - run: ls -R ${{ github.workspace }}
 
       - name: Create draft release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
-          gh release create ${{ github.ref_name }} ./dist/tgnotifier_${{ github.ref_name }}_*
+          gh release create ${{ github.ref_name }} ${{ github.workspace }}/tgnotifier_${{ github.ref_name }}_*
           --title "${{ github.ref_name }}"
           --generate-notes
           --draft

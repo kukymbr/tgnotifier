@@ -6,7 +6,6 @@ on:
       - 'v*'
 
 env:
-  ARTIFACT_NAME: tgnotifier_dist
   EXECUTABLE_NAME: tgnotifier
   EXECUTABLE_NAME_WINDOWS: tgnotifier.exe
   GO_VERSION: '1.24'
@@ -33,6 +32,8 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
     runs-on: ${{ matrix.os }}
+    env:
+      ARTIFACT_NAME: tgnotifier_${{ github.ref_name }}_${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
 
@@ -69,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ${{ github.workspace }}
-          name: ${{ env.ARTIFACT_NAME }}
+          pattern: tgnotifier_${{ github.ref_name }}_*
           merge-multiple: true
 
       - name: Print artifacts

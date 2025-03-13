@@ -17,7 +17,7 @@ validate:
 	$(MAKE) test
 
 build:
-	go build ./cmd/tgnotifier
+	go build $(build_arguments) ./cmd/tgnotifier
 
 build_without_gprc:
 	go build -tags no_grpc ./cmd/tgnotifier

@@ -84,17 +84,47 @@ make build_without_servers
 ```
 </details>
 
-### Docker
+<details>
+  <summary><b>Docker configuration</b></summary>
 
-There is a Docker configuration for a `tgnotifier`.
+Docker image: 
+[ghcr.io/kukymbr/tgnotifier:0.7.1](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/369286829).
 
-Pure `docker run` call example: 
+#### Docker usage examples
+
+Sending message without a configuration file:
 
 ```shell
-docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.5.0 send --text="what's up?"
+docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.7.1 send --text="what's up?"
 ```
 
-See the [docker/compose.yml](docker/compose.yml) file for a docker compose usage example.
+Sending message with a configuration file:
+
+```shell
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.1 send --text="what's up?"
+```
+
+Starting a gRPC server:
+
+```shell
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.1 grpc
+```
+
+Using as a docker compose service:
+
+```yaml
+services:
+  tgnotifier:
+    image: ghcr.io/kukymbr/tgnotifier:0.7.1
+    volumes:
+      - /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml
+    ports:
+      - "127.0.0.1:8080:8080"
+    command: ["grpc"]
+```
+
+See the [docker](docker) directory for a full docker compose usage example.
+</details>
 
 ## Configuration
 

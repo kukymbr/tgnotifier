@@ -90,7 +90,7 @@ make build_without_servers
   <summary><b>Docker configuration</b></summary>
 
 Docker image: 
-[ghcr.io/kukymbr/tgnotifier:0.7.2](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/369286829).
+[ghcr.io/kukymbr/tgnotifier:0.7.2](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/373703248?tag=0.7.2).
 
 #### Docker usage examples
 

@@ -25,18 +25,13 @@ const (
 	textareaHeight = 150
 
 	buttonHeight = 20
-	buttonWidth  = (columnWidth - margin*2) / 4
+	buttonWidth  = (columnWidth - margin*2) / 2
 )
 
 func createComponents(ctx *spot.RenderContext, ctrl *controller) (components []spot.Component, windowH int) {
 	ctrl.responseContent, ctrl.setResponseContent = spot.UseState(ctx, "")
 
 	return []spot.Component{
-		label("Message"),
-		textarea(func(s string) {
-			ctrl.messageContent = s
-		}),
-
 		label("Send from:"),
 		dropdown(
 			ctrl.getDefaultBotIndex(),
@@ -45,6 +40,12 @@ func createComponents(ctx *spot.RenderContext, ctrl *controller) (components []s
 			},
 			ctrl.getBots()...,
 		),
+		button("Check bot...", func() {
+			ctrl.getMe()
+		}),
+		button("Get updates...", func() {
+			ctrl.getUpdates()
+		}),
 
 		label("Send to:"),
 		dropdown(
@@ -55,7 +56,12 @@ func createComponents(ctx *spot.RenderContext, ctrl *controller) (components []s
 			ctrl.getChats()...,
 		),
 
-		button("Send", func() {
+		label("Message"),
+		textarea(func(s string) {
+			ctrl.messageContent = s
+		}),
+
+		button("Send it now!", func() {
 			ctrl.sendMessage()
 		}),
 

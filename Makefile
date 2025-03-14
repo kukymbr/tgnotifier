@@ -5,6 +5,7 @@ all:
 	$(MAKE) prepare
 	$(MAKE) validate
 	$(MAKE) build
+	$(MAKE) build_gui
 
 prepare:
 	go mod tidy

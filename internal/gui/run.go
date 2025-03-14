@@ -15,10 +15,15 @@ type Sender interface {
 	Send(ctx context.Context, options types.SendOptions) (*tgkit.TgMessage, error)
 }
 
-func Run(conf *config.Config, sender Sender) {
+type Client interface {
+	GetMe(bot tgkit.Bot) (*tgkit.TgUser, error)
+	GetUpdates(bot tgkit.Bot) ([]tgkit.TgUpdate, error)
+}
+
+func Run(conf *config.Config, sender Sender, tgClient Client) {
 	ui.Init()
 
-	ctrl := newController(conf, sender)
+	ctrl := newController(conf, sender, tgClient)
 
 	spot.MountFn(func(ctx *spot.RenderContext) spot.Component {
 		components, windowH := createComponents(ctx, ctrl)

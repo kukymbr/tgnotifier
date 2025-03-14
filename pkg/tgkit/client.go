@@ -13,6 +13,7 @@ import (
 
 const (
 	tgAPIHost           = "https://api.telegram.org/"
+	tgMethodGetUpdates  = "getUpdates"
 	tgMethodGetMe       = "getMe"
 	tgMethodSendMessage = "sendMessage"
 )
@@ -116,6 +117,19 @@ func (c *Client) GetMe(bot Bot) (*TgUser, error) {
 	}
 
 	return &resp.Result, nil
+}
+
+// GetUpdates returns last bot's updates.
+// See https://core.telegram.org/bots/api#getupdates
+// TODO: pass parameters.
+func (c *Client) GetUpdates(bot Bot) ([]TgUpdate, error) {
+	var resp TgUpdatesResponse
+
+	if err := c.Get(bot, tgMethodGetUpdates, &resp); err != nil {
+		return nil, err
+	}
+
+	return resp.Result, nil
 }
 
 // SendMessage sends a message from the bot via the Telegram API.

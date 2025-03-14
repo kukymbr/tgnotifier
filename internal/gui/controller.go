@@ -10,10 +10,11 @@ import (
 	"github.com/kukymbr/tgnotifier/internal/types"
 )
 
-func newController(conf *config.Config, sender Sender) *controller {
+func newController(conf *config.Config, sender Sender, tgClient Client) *controller {
 	ctrl := &controller{
-		conf:   conf,
-		sender: sender,
+		conf:     conf,
+		sender:   sender,
+		tgClient: tgClient,
 	}
 
 	ctrl.selectedBotIndex = ctrl.getDefaultBotIndex()
@@ -23,8 +24,9 @@ func newController(conf *config.Config, sender Sender) *controller {
 }
 
 type controller struct {
-	conf   *config.Config
-	sender Sender
+	conf     *config.Config
+	sender   Sender
+	tgClient Client
 
 	selectedBotIndex  int
 	selectedChatIndex int
@@ -35,6 +37,8 @@ type controller struct {
 }
 
 func (c *controller) sendMessage() {
+	c.printWait()
+
 	opt := types.SendOptions{}
 
 	_ = opt.BotName.Set(c.getBots()[c.selectedBotIndex])
@@ -60,6 +64,46 @@ func (c *controller) sendMessage() {
 	c.printResponse(resp)
 }
 
+func (c *controller) getMe() {
+	c.printWait()
+
+	bot, err := c.conf.Bots().FindByNameIndex(c.selectedBotIndex)
+	if err != nil {
+		c.printError(err)
+
+		return
+	}
+
+	resp, err := c.tgClient.GetMe(bot)
+	if err != nil {
+		c.printError(err)
+
+		return
+	}
+
+	c.printResponse(resp)
+}
+
+func (c *controller) getUpdates() {
+	c.printWait()
+
+	bot, err := c.conf.Bots().FindByNameIndex(c.selectedBotIndex)
+	if err != nil {
+		c.printError(err)
+
+		return
+	}
+
+	resp, err := c.tgClient.GetUpdates(bot)
+	if err != nil {
+		c.printError(err)
+
+		return
+	}
+
+	c.printResponse(resp)
+}
+
 func (c *controller) printResponse(resp any) {
 	data, err := jsoniter.MarshalIndent(resp, "", "  ")
 	if err != nil {
@@ -69,6 +113,10 @@ func (c *controller) printResponse(resp any) {
 	}
 
 	c.setResponseContent(string(data))
+}
+
+func (c *controller) printWait() {
+	c.setResponseContent("Please wait...")
 }
 
 func (c *controller) printError(err error) {

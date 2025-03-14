@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	gui.Run(ctn.Config, ctn.Sender)
+	gui.Run(ctn.Config, ctn.Sender, ctn.Client)
 }
 
 func initGenericFlags(args []string) {

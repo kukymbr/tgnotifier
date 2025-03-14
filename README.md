@@ -334,6 +334,13 @@ Flags:
 
 See the [openapi.yaml](api/http/openapi.yaml) for an API contract.
 
+## GUI
+
+If you want to test or visualize `tgnotifier` possibilities or to send couple messages via the UI, 
+run the `tgnotifierui` app.
+
+See the [GUI readme](cmd/tgnotifierui/readme.md) for more info.
+
 ## `tgkit` library
 
 Yes, there also a library to communicate with a Telegram API.

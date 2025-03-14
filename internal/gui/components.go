@@ -32,7 +32,7 @@ func createComponents(ctx *spot.RenderContext, ctrl *controller) (components []s
 	ctrl.responseContent, ctrl.setResponseContent = spot.UseState(ctx, "")
 
 	return []spot.Component{
-		label("Send from:"),
+		label("Bot:"),
 		dropdown(
 			ctrl.getDefaultBotIndex(),
 			func(index int) {

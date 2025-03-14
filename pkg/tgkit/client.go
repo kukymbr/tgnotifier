@@ -109,14 +109,14 @@ func (c *Client) Post(bot Bot, method string, reqData any, target any) error {
 
 // GetMe returns information about the Bot in the TgUser format.
 // See: https://core.telegram.org/bots/api#getme
-func (c *Client) GetMe(bot Bot) (*TgUser, error) {
-	var resp *TgUserResponse
+func (c *Client) GetMe(bot Bot) (TgUser, error) {
+	var resp TgUserResponse
 
 	if err := c.Get(bot, tgMethodGetMe, &resp); err != nil {
-		return nil, err
+		return TgUser{}, err
 	}
 
-	return &resp.Result, nil
+	return resp.Result, nil
 }
 
 // GetUpdates returns last bot's updates.
@@ -134,14 +134,14 @@ func (c *Client) GetUpdates(bot Bot) ([]TgUpdate, error) {
 
 // SendMessage sends a message from the bot via the Telegram API.
 // See: https://core.telegram.org/bots/api#sendmessage
-func (c *Client) SendMessage(bot Bot, msg TgMessageRequest) (*TgMessage, error) {
-	var resp *TgMessageResponse
+func (c *Client) SendMessage(bot Bot, msg TgMessageRequest) (TgMessage, error) {
+	var resp TgMessageResponse
 
 	if err := c.Post(bot, tgMethodSendMessage, msg, &resp); err != nil {
-		return nil, err
+		return TgMessage{}, err
 	}
 
-	return &resp.Result, nil
+	return resp.Result, nil
 }
 
 func encodeRequestBody(data any) (io.Reader, error) {

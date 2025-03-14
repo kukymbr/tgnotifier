@@ -27,19 +27,19 @@ type Sender struct {
 }
 
 // Send sends a message from the bot to the chat.
-func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMessage, error) {
+func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (tgkit.TgMessage, error) {
 	if err := opt.Validate(); err != nil {
-		return nil, err
+		return tgkit.TgMessage{}, err
 	}
 
 	bot, err := s.conf.Bots().FindByName(opt.BotName)
 	if err != nil {
-		return nil, err
+		return tgkit.TgMessage{}, err
 	}
 
 	chatID, err := s.conf.Chats().FindByName(opt.ChatName)
 	if err != nil {
-		return nil, err
+		return tgkit.TgMessage{}, err
 	}
 
 	opt.Message.Text = s.msgProc.Process(opt.Message.Text)
@@ -50,7 +50,7 @@ func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMess
 	}
 
 	if err := ctx.Err(); err != nil {
-		return nil, err
+		return tgkit.TgMessage{}, err
 	}
 
 	return s.client.SendMessage(bot, tgkit.TgMessageRequest{

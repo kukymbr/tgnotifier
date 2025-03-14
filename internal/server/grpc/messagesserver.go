@@ -15,7 +15,7 @@ import (
 )
 
 type Sender interface {
-	Send(ctx context.Context, options types.SendOptions) (*tgkit.TgMessage, error)
+	Send(ctx context.Context, options types.SendOptions) (tgkit.TgMessage, error)
 }
 
 func registerMessagesServer(grpcSrv *grpcpkg.Server, conf *config.Config, sender Sender) {

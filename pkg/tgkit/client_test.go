@@ -28,7 +28,7 @@ func TestClient_GetMe_WhenInvalid_ExpectError(t *testing.T) {
 			resp, err := client.GetMe(bot)
 
 			assert.Error(t, err)
-			assert.Nil(t, resp)
+			assert.Empty(t, resp)
 		})
 	}
 }
@@ -72,13 +72,13 @@ func TestClient_GetMe(t *testing.T) {
 
 	tests := []struct {
 		BotIdentity string
-		Assert      func(t *testing.T, user *tgkit.TgUser, err error)
+		Assert      func(t *testing.T, user tgkit.TgUser, err error)
 	}{
 		{
 			BotIdentity: "1:test1",
-			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
+			Assert: func(t *testing.T, user tgkit.TgUser, err error) {
 				require.NoError(t, err)
-				require.NotNil(t, user)
+				require.NotEmpty(t, user)
 
 				assert.True(t, user.IsBot)
 				assert.Equal(t, "Test Bot 1", user.FirstName)
@@ -86,9 +86,9 @@ func TestClient_GetMe(t *testing.T) {
 		},
 		{
 			BotIdentity: "2:test2",
-			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
+			Assert: func(t *testing.T, user tgkit.TgUser, err error) {
 				require.NoError(t, err)
-				require.NotNil(t, user)
+				require.NotEmpty(t, user)
 
 				assert.True(t, user.IsBot)
 				assert.Equal(t, "Test Bot 2", user.FirstName)
@@ -96,9 +96,9 @@ func TestClient_GetMe(t *testing.T) {
 		},
 		{
 			BotIdentity: "3:test3",
-			Assert: func(t *testing.T, user *tgkit.TgUser, err error) {
+			Assert: func(t *testing.T, user tgkit.TgUser, err error) {
 				assert.Error(t, err)
-				assert.Nil(t, user)
+				assert.Empty(t, user)
 			},
 		},
 	}
@@ -151,15 +151,15 @@ func TestClient_SendMessage(t *testing.T) {
 		BotIdentity string
 		ChatID      string
 		Text        string
-		Assert      func(t *testing.T, msg *tgkit.TgMessage, err error)
+		Assert      func(t *testing.T, msg tgkit.TgMessage, err error)
 	}{
 		{
 			BotIdentity: "1:test1",
 			ChatID:      "1",
 			Text:        "Test 1",
-			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, msg tgkit.TgMessage, err error) {
 				assert.NoError(t, err)
-				assert.NotNil(t, msg)
+				assert.NotEmpty(t, msg)
 				assert.Equal(t, 1, msg.MessageID)
 			},
 		},
@@ -167,18 +167,18 @@ func TestClient_SendMessage(t *testing.T) {
 			BotIdentity: "2:test2",
 			ChatID:      "1",
 			Text:        "Test 2",
-			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, msg tgkit.TgMessage, err error) {
 				assert.Error(t, err)
-				assert.Nil(t, msg)
+				assert.Empty(t, msg)
 			},
 		},
 		{
 			BotIdentity: "bot3:test3",
 			ChatID:      "1",
 			Text:        "Test 3",
-			Assert: func(t *testing.T, msg *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, msg tgkit.TgMessage, err error) {
 				assert.Error(t, err)
-				assert.Nil(t, msg)
+				assert.Empty(t, msg)
 				assert.Contains(t, err.Error(), "failed after 2 attempts")
 			},
 		},

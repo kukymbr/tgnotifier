@@ -12,11 +12,11 @@ import (
 )
 
 type Sender interface {
-	Send(ctx context.Context, options types.SendOptions) (*tgkit.TgMessage, error)
+	Send(ctx context.Context, options types.SendOptions) (tgkit.TgMessage, error)
 }
 
 type Client interface {
-	GetMe(bot tgkit.Bot) (*tgkit.TgUser, error)
+	GetMe(bot tgkit.Bot) (tgkit.TgUser, error)
 	GetUpdates(bot tgkit.Bot) ([]tgkit.TgUpdate, error)
 }
 

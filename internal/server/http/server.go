@@ -77,7 +77,7 @@ func (s *messagesService) Send(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.responseOk(w, *tgResp)
+	s.responseOk(w, tgResp)
 }
 
 func (s *messagesService) parseRequest(r *http.Request) (types.SendOptions, error) {

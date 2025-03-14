@@ -147,7 +147,7 @@ func TestSender(t *testing.T) {
 		t.Run(test.Name, func(t *testing.T) {
 			t.Parallel()
 
-			conf, err := config.NewConfig(config.FromString(getTestConfig()))
+			conf, err := config.New(config.FromString(getTestConfig()))
 
 			require.NoError(t, err)
 			require.NotNil(t, conf)

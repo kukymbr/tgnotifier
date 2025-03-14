@@ -122,8 +122,6 @@ func (s *messagesService) parseRequest(r *http.Request) (types.SendOptions, erro
 		return types.SendOptions{}, err
 	}
 
-	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
-
 	if err := opt.Validate(); err != nil {
 		return types.SendOptions{}, err
 	}

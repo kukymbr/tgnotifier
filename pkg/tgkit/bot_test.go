@@ -60,7 +60,7 @@ func TestNewBot_WhenInvalid_ExpectError(t *testing.T) {
 			bot, err := tgkit.NewBot(test.Identity)
 
 			assert.Error(t, err)
-			assert.Nil(t, bot)
+			assert.Empty(t, bot.String())
 		})
 	}
 }

@@ -28,18 +28,16 @@ type Sender struct {
 
 // Send sends a message from the bot to the chat.
 func (s *Sender) Send(ctx context.Context, opt types.SendOptions) (*tgkit.TgMessage, error) {
-	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
-
 	if err := opt.Validate(); err != nil {
 		return nil, err
 	}
 
-	bot, err := s.conf.Bots().GetBot(opt.BotName)
+	bot, err := s.conf.Bots().FindByName(opt.BotName)
 	if err != nil {
 		return nil, err
 	}
 
-	chatID, err := s.conf.Chats().GetChatID(opt.ChatName)
+	chatID, err := s.conf.Chats().FindByName(opt.ChatName)
 	if err != nil {
 		return nil, err
 	}

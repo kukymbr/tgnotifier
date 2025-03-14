@@ -93,8 +93,6 @@ func (s *messagesServer) getSendOptions(req *grpc.SendMessageRequest) (types.Sen
 		ProtectContent:      msg.GetProtectContent(),
 	}
 
-	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
-
 	if err := opt.Validate(); err != nil {
 		return types.SendOptions{}, err
 	}

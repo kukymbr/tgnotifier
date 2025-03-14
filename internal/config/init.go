@@ -18,13 +18,25 @@ const (
 	defaultHTTPPort = 8080
 
 	defaultClientTimeout = 30 * time.Second
+
+	retrierNoop        = "noop"
+	retrierLinear      = "linear"
+	retrierProgressive = "progressive"
 )
 
-// NewConfig reads config from the file if existing file given,
+// New reads config from the file if existing file given,
 // and from the env if values are presented.
-func NewConfig(readerFactory ...SourceReaderFactory) (*Config, error) {
+func New(readerFactory ...SourceReaderFactory) (*Config, error) {
+	conf := &Config{
+		bots: types.NewNamed[types.BotName, tgkit.Bot]("", func(bot tgkit.Bot) types.BotName {
+			return types.BotToName(bot)
+		}),
+		chats: types.NewNamed[types.ChatName, tgkit.ChatID]("", func(chatID tgkit.ChatID) types.ChatName {
+			return types.ChatIDToName(chatID)
+		}),
+	}
+
 	var (
-		conf   = &Config{}
 		reader io.ReadCloser
 		err    error
 	)
@@ -41,8 +53,7 @@ func NewConfig(readerFactory ...SourceReaderFactory) (*Config, error) {
 			_ = reader.Close()
 		}()
 
-		conf, err = newConfigFromReader(reader)
-		if err != nil {
+		if err := readConfigFromReader(conf, reader); err != nil {
 			return nil, err
 		}
 	}
@@ -54,59 +65,55 @@ func NewConfig(readerFactory ...SourceReaderFactory) (*Config, error) {
 	return conf, nil
 }
 
-// newConfigFromReader reads Config from io.Reader.
-func newConfigFromReader(inp io.Reader) (*Config, error) {
+func readConfigFromReader(conf *Config, inp io.Reader) error {
 	data, err := io.ReadAll(inp)
 	if err != nil {
-		return nil, fmt.Errorf("read config data from reader: %w", err)
+		return fmt.Errorf("read config data from reader: %w", err)
 	}
 
 	var raw *configDTO
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
-		return nil, fmt.Errorf("decode config data: %w", err)
+		return fmt.Errorf("decode config data: %w", err)
 	}
 
 	if raw == nil || len(raw.Bots) == 0 {
-		return nil, fmt.Errorf("invalid config: no bots given")
+		return fmt.Errorf("invalid config: no bots given")
 	}
 
 	if len(raw.Chats) == 0 {
-		return nil, fmt.Errorf("invalid config: no chats given")
+		return fmt.Errorf("invalid config: no chats given")
 	}
-
-	conf := &Config{}
-	conf.init()
 
 	for botName, identity := range raw.Bots {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
-			return nil, fmt.Errorf("read bot from config: %w", err)
+			return fmt.Errorf("read bot from config: %w", err)
 		}
 
-		conf.bots[botName] = bot
+		conf.Bots().Add(botName, bot)
 	}
 
 	for chatName, chatIDStr := range raw.Chats {
 		chatID := tgkit.ChatID(chatIDStr)
 		if chatID == "" {
-			return nil, fmt.Errorf("empty chat ID for %s in config", chatName)
+			return fmt.Errorf("empty chat ID for %s in config", chatName)
 		}
 
-		conf.chats[chatName] = chatID
+		conf.chats.Add(chatName, chatID)
 	}
 
-	conf.defaultBotName = raw.DefaultBot
-	conf.defaultChatName = raw.DefaultChat
+	conf.Bots().SetDefaultName(raw.DefaultBot)
+	conf.Chats().SetDefaultName(raw.DefaultChat)
 
 	conf.silenceSchedule, err = parseTimeSchedule(raw.SilenceSchedule)
 	if err != nil {
-		return nil, fmt.Errorf("parse silence schedule from config: %w", err)
+		return fmt.Errorf("parse silence schedule from config: %w", err)
 	}
 
 	conf.retrier, err = newRetrier(raw.Retrier)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize request retrier from config: %w", err)
+		return fmt.Errorf("failed to initialize request retrier from config: %w", err)
 	}
 
 	conf.client = ClientConfig{
@@ -123,7 +130,7 @@ func newConfigFromReader(inp io.Reader) (*Config, error) {
 		port: raw.HTTP.Port,
 	}
 
-	return conf, nil
+	return nil
 }
 
 func setupConfigValues(conf *Config) error {
@@ -131,11 +138,11 @@ func setupConfigValues(conf *Config) error {
 		return err
 	}
 
-	if len(conf.bots) == 0 {
+	if conf.Bots().Len() == 0 {
 		return fmt.Errorf("no bots registered in config file or env")
 	}
 
-	if len(conf.chats) == 0 {
+	if conf.Chats().Len() == 0 {
 		return fmt.Errorf("no chats registered in config file or env")
 	}
 
@@ -154,21 +161,24 @@ func setupConfigValues(conf *Config) error {
 }
 
 func readDefaultsFromEnv(conf *Config) error {
-	conf.init()
-
 	if identity := os.Getenv(EnvDefaultBot); identity != "" {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
 			return fmt.Errorf("read bot from %s: %w", EnvDefaultBot, err)
 		}
 
-		conf.bots[types.DefaultBotName] = bot
-		conf.defaultBotName = types.DefaultBotName
+		name := types.BotToName(bot)
+
+		conf.Bots().Add(name, bot)
+		conf.Bots().SetDefaultName(name)
 	}
 
 	if chatIDStr := os.Getenv(EnvDefaultChat); chatIDStr != "" {
-		conf.chats[types.DefaultChatName] = tgkit.ChatID(chatIDStr)
-		conf.defaultChatName = types.DefaultChatName
+		chatID := tgkit.ChatID(chatIDStr)
+		name := types.ChatIDToName(chatID)
+
+		conf.Chats().Add(name, chatID)
+		conf.Chats().SetDefaultName(name)
 	}
 
 	return nil
@@ -213,11 +223,11 @@ func setServerDefaults(conf *ServerConfig, defaultHost string, defaultPort int) 
 
 func newRetrier(dto retrierConfigDTO) (tgkit.RequestRetrier, error) {
 	switch dto.Type {
-	case "noop", "":
+	case retrierNoop, "":
 		return tgkit.NewNoopRetrier(), nil
-	case "linear":
+	case retrierLinear:
 		return tgkit.NewLinearRetrier(dto.Attempts, dto.Delay), nil
-	case "progressive":
+	case retrierProgressive:
 		return tgkit.NewProgressiveRetrier(dto.Attempts, dto.Delay, dto.Multiplier), nil
 	}
 

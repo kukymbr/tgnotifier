@@ -1,9 +1,16 @@
 package types
 
-const (
-	DefaultBotName  BotName  = "__default__"
-	DefaultChatName ChatName = "__default__"
-)
+import "github.com/kukymbr/tgnotifier/pkg/tgkit"
+
+// BotToName returns BotName from the bot's ID.
+func BotToName(bot tgkit.Bot) BotName {
+	return BotName("bot" + bot.GetID().String())
+}
+
+// ChatIDToName returns ChatName from the chat ID.
+func ChatIDToName(chatID tgkit.ChatID) ChatName {
+	return ChatName("chat" + chatID.String())
+}
 
 // BotName is a given bot name from the configs.
 type BotName string

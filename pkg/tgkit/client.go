@@ -47,12 +47,6 @@ func NewClientWithOptions(options ...ClientOption) *Client {
 	return c
 }
 
-// NewClient creates a new telegram Client instance.
-// Deprecated: use NewClientWithOptions instead.
-func NewClient(httpClient HTTPClient) *Client {
-	return NewClientWithOptions(WithHTTPClient(httpClient))
-}
-
 // Client is a tool to communicate with a Telegram API via the HTTPS.
 type Client struct {
 	httpClient HTTPClient
@@ -61,7 +55,7 @@ type Client struct {
 
 // Get sends a GET request to the Telegram API.
 // The successful response is decoded into the target.
-func (c *Client) Get(bot *Bot, method string, target any) error {
+func (c *Client) Get(bot Bot, method string, target any) error {
 	url, urlDebug := getURLs(bot, method)
 
 	resp, err := c.retrier.Do(func() (*http.Response, error) {
@@ -85,7 +79,7 @@ func (c *Client) Get(bot *Bot, method string, target any) error {
 
 // Post sends a POST request to the Telegram API.
 // The successful response is decoded into the target.
-func (c *Client) Post(bot *Bot, method string, reqData any, target any) error {
+func (c *Client) Post(bot Bot, method string, reqData any, target any) error {
 	url, urlDebug := getURLs(bot, method)
 
 	reqBody, err := encodeRequestBody(reqData)
@@ -114,7 +108,7 @@ func (c *Client) Post(bot *Bot, method string, reqData any, target any) error {
 
 // GetMe returns information about the Bot in the TgUser format.
 // See: https://core.telegram.org/bots/api#getme
-func (c *Client) GetMe(bot *Bot) (*TgUser, error) {
+func (c *Client) GetMe(bot Bot) (*TgUser, error) {
 	var resp *TgUserResponse
 
 	if err := c.Get(bot, tgMethodGetMe, &resp); err != nil {
@@ -126,7 +120,7 @@ func (c *Client) GetMe(bot *Bot) (*TgUser, error) {
 
 // SendMessage sends a message from the bot via the Telegram API.
 // See: https://core.telegram.org/bots/api#sendmessage
-func (c *Client) SendMessage(bot *Bot, msg TgMessageRequest) (*TgMessage, error) {
+func (c *Client) SendMessage(bot Bot, msg TgMessageRequest) (*TgMessage, error) {
 	var resp *TgMessageResponse
 
 	if err := c.Post(bot, tgMethodSendMessage, msg, &resp); err != nil {
@@ -179,7 +173,7 @@ func parseResponse(resp *http.Response, target any) (*TgErrorResponse, error) {
 	return errResp, nil
 }
 
-func getURLs(bot *Bot, method string) (url string, debug string) {
+func getURLs(bot Bot, method string) (url string, debug string) {
 	return tgAPIHost + bot.GetIdentity().String() + "/" + method,
 		tgAPIHost + bot.String() + "/" + method
 }

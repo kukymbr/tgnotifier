@@ -36,19 +36,29 @@ func (t BotIdentity) String() string {
 // Examples of the identity strings:
 // - `bot12345:botToken1`
 // - `54321:botToken2`
-func NewBot(identity string) (*Bot, error) {
+func NewBot(identity string) (Bot, error) {
 	matches := rxBotIdentity.FindAllStringSubmatch(identity, -1)
 
 	if len(matches) == 0 {
-		return nil, fmt.Errorf("invalid bot identity string format")
+		return Bot{}, fmt.Errorf("invalid bot identity string format")
 	}
 
 	id, _ := strconv.ParseUint(matches[0][1], 10, 64)
 
-	return &Bot{
+	return Bot{
 		id:    BotID(id),
 		token: BotToken(matches[0][2]),
 	}, nil
+}
+
+// MustNewBot creates new Bot and panics on failure.
+func MustNewBot(identity string) Bot {
+	bot, err := NewBot(identity)
+	if err != nil {
+		panic(err)
+	}
+
+	return bot
 }
 
 // Bot is a telegram bot model.
@@ -58,22 +68,30 @@ type Bot struct {
 }
 
 // GetID returns a Bot ID number.
-func (b *Bot) GetID() BotID {
+func (b Bot) GetID() BotID {
 	return b.id
 }
 
 // GetToken returns a Bot token string.
-func (b *Bot) GetToken() BotToken {
+func (b Bot) GetToken() BotToken {
 	return b.token
 }
 
 // GetIdentity returns a Bot identity string to pass it to the API.
-func (b *Bot) GetIdentity() BotIdentity {
+func (b Bot) GetIdentity() BotIdentity {
+	if b.GetID() == BotID(0) {
+		return ""
+	}
+
 	return BotIdentity("bot" + b.GetID().String() + ":" + b.GetToken().String())
 }
 
 // String returns a Bot identity with a masked token for the debug purposes.
-func (b *Bot) String() string {
+func (b Bot) String() string {
+	if b.GetID() == BotID(0) {
+		return ""
+	}
+
 	token := b.GetToken().String()
 	if token != "" {
 		token = "*****"

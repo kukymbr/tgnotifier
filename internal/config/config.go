@@ -16,11 +16,8 @@ const (
 
 // Config is a tgnotifier configuration.
 type Config struct {
-	bots  BotsIndex
-	chats ChatsIndex
-
-	defaultBotName  types.BotName
-	defaultChatName types.ChatName
+	bots  *types.Named[types.BotName, tgkit.Bot]
+	chats *types.Named[types.ChatName, tgkit.ChatID]
 
 	silenceSchedule *types.TimeSchedule
 
@@ -34,23 +31,13 @@ type Config struct {
 }
 
 // Bots - returns registered bots index.
-func (c *Config) Bots() BotsIndex {
+func (c *Config) Bots() *types.Named[types.BotName, tgkit.Bot] {
 	return c.bots
 }
 
 // Chats returns registered chats index.
-func (c *Config) Chats() ChatsIndex {
+func (c *Config) Chats() *types.Named[types.ChatName, tgkit.ChatID] {
 	return c.chats
-}
-
-// GetDefaultBotName returns a default bot name if no bot name defined in arguments.
-func (c *Config) GetDefaultBotName() types.BotName {
-	return c.defaultBotName
-}
-
-// GetDefaultChatName returns a default chat name if no chat name defined in arguments.
-func (c *Config) GetDefaultChatName() types.ChatName {
-	return c.defaultChatName
 }
 
 // GetSilenceSchedule returns a schedule when all the messages should be sent without a sound.
@@ -89,16 +76,6 @@ func (c *Config) HTTP() ServerConfig {
 // GetRequestRetrier returns tgkit.RequestRetrier instance.
 func (c *Config) GetRequestRetrier() tgkit.RequestRetrier {
 	return c.retrier
-}
-
-func (c *Config) init() {
-	if c.bots == nil {
-		c.bots = make(BotsIndex)
-	}
-
-	if c.chats == nil {
-		c.chats = make(ChatsIndex)
-	}
 }
 
 // BotsIndex is an index of the registered bots.

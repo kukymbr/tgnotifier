@@ -28,6 +28,9 @@ build_without_http:
 build_without_servers:
 	go build -tags no_http,no_grpc ./cmd/tgnotifier
 
+build_gui:
+	go build -tags gui,no_http,no_grpc ./cmd/tgnotifierui
+
 apis:
 	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/
 	oapi-codegen --config=./api/http/oapi.config.yml ./api/http/openapi.yaml

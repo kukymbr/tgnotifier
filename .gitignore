@@ -5,6 +5,8 @@
 # Executables
 /tgnotifier
 /tgnotifier.exe
+/tgnotifierui
+/tgnotifierui.exe
 
 # Test generated files
 coverage_out

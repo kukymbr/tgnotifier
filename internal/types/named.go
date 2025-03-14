@@ -59,11 +59,6 @@ func (n *Named[TNames, TValues]) Add(name TNames, item TValues) {
 	slices.Sort(n.names)
 }
 
-// SetDefaultName sets name as a default item name.
-func (n *Named[TNames, TValues]) SetDefaultName(name TNames) {
-	n.defaultName = name
-}
-
 // FindByName finds item by its name.
 func (n *Named[TNames, TValues]) FindByName(name TNames) (TValues, error) {
 	var (
@@ -101,6 +96,16 @@ func (n *Named[TNames, TValues]) FindByNameIndex(index int) (TValues, error) {
 // GetNames returns ordered list of the items' names.
 func (n *Named[TNames, TValues]) GetNames() []TNames {
 	return n.names
+}
+
+// SetDefaultName sets name as a default item name.
+func (n *Named[TNames, TValues]) SetDefaultName(name TNames) {
+	n.defaultName = name
+}
+
+// GetDefaultName returns name registered as a default one.
+func (n *Named[TNames, TValues]) GetDefaultName() TNames {
+	return n.defaultName
 }
 
 // Len returns count of the items.

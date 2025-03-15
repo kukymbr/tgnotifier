@@ -26,11 +26,12 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
-        executable: [ tgnotifier, tgnotifierui ]
+        executable: [ tgnotifier ]
+        # executable: [ tgnotifier, tgnotifierui ]
     runs-on: ${{ matrix.os }}
     env:
       ARTIFACT_NAME: ${{ matrix.executable }}_${{ github.ref_name }}_${{ matrix.os }}
-      BUILD_CMD: ${{ matrix.executable == 'tgnotifier' && 'build' || 'build_gui' }}
+      BUILD_CMD: ${{ matrix.executable == 'tgnotifierui' && 'build_gui' || 'build' }}
     steps:
       - uses: actions/checkout@v3
 

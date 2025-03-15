@@ -21,7 +21,7 @@ build:
 	go build $(build_arguments) ./cmd/tgnotifier
 
 build_without_gprc:
-	go build -tags no_grpc ./cmd/tgnotifier
+	go build -tags no_grpc $(build_arguments) ./cmd/tgnotifier
 
 build_without_http:
 	go build -tags no_http ./cmd/tgnotifier

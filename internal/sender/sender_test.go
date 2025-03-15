@@ -29,7 +29,7 @@ func TestSender(t *testing.T) {
 		Name        string
 		SetupClient func(t *testing.T, httpMock *tgkit.HTTPClientJSONMock)
 		SendOptions types.SendOptions
-		Assert      func(t *testing.T, resp *tgkit.TgMessage, err error)
+		Assert      func(t *testing.T, resp tgkit.TgMessage, err error)
 	}{
 		{
 			Name: "when ok (default bot)",
@@ -51,9 +51,9 @@ func TestSender(t *testing.T) {
 					Text: "test1",
 				},
 			},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				require.NoError(t, err)
-				require.NotNil(t, resp)
+				require.NotEmpty(t, resp)
 
 				assert.Equal(t, 1, resp.MessageID)
 			},
@@ -79,9 +79,9 @@ func TestSender(t *testing.T) {
 					Text: "test1",
 				},
 			},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				require.NoError(t, err)
-				require.NotNil(t, resp)
+				require.NotEmpty(t, resp)
 
 				assert.Equal(t, 1, resp.MessageID)
 			},
@@ -105,9 +105,9 @@ func TestSender(t *testing.T) {
 					Text: "test1",
 				},
 			},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				assert.Error(t, err)
-				assert.Nil(t, resp)
+				assert.Empty(t, resp)
 			},
 		},
 		{
@@ -118,14 +118,14 @@ func TestSender(t *testing.T) {
 					Text: "test",
 				},
 			},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				assert.Error(t, err)
 			},
 		},
 		{
 			Name:        "when message invalid",
 			SendOptions: types.SendOptions{},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				assert.Error(t, err)
 			},
 		},
@@ -137,7 +137,7 @@ func TestSender(t *testing.T) {
 					Text: "test",
 				},
 			},
-			Assert: func(t *testing.T, resp *tgkit.TgMessage, err error) {
+			Assert: func(t *testing.T, resp tgkit.TgMessage, err error) {
 				assert.Error(t, err)
 			},
 		},
@@ -147,7 +147,7 @@ func TestSender(t *testing.T) {
 		t.Run(test.Name, func(t *testing.T) {
 			t.Parallel()
 
-			conf, err := config.NewConfig(config.FromString(getTestConfig()))
+			conf, err := config.New(config.FromString(getTestConfig()))
 
 			require.NoError(t, err)
 			require.NotNil(t, conf)

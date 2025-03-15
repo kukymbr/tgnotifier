@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func requireBot(t *testing.T) *tgkit.Bot {
+func requireBot(t *testing.T) tgkit.Bot {
 	ident := os.Getenv("TGKIT_ENVTEST_BOT_IDENTITY")
 
 	bot, err := tgkit.NewBot(ident)
@@ -41,7 +41,7 @@ func TestClient_GetMe_Env(t *testing.T) {
 	resp, err := client.GetMe(bot)
 
 	require.NoError(t, err)
-	require.NotNil(t, resp)
+	require.NotEmpty(t, resp)
 
 	assert.True(t, resp.IsBot)
 }
@@ -58,7 +58,7 @@ func TestClient_SendMessage_Env(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.NotNil(t, resp)
+	require.NotEmpty(t, resp)
 
 	assert.NotEmpty(t, resp.MessageID)
 }

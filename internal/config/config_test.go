@@ -11,7 +11,7 @@ import (
 )
 
 func assertBot(t *testing.T, conf *config.Config, name types.BotName, expected string) {
-	bot, err := conf.Bots().GetBot(name)
+	bot, err := conf.Bots().FindByName(name)
 
 	require.NoError(t, err)
 	require.NotNil(t, bot)
@@ -20,7 +20,7 @@ func assertBot(t *testing.T, conf *config.Config, name types.BotName, expected s
 }
 
 func assertChat(t *testing.T, conf *config.Config, name types.ChatName, expected string) {
-	chat, err := conf.Chats().GetChatID(name)
+	chat, err := conf.Chats().FindByName(name)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, chat)
@@ -62,14 +62,11 @@ func TestNewConfig(t *testing.T) {
 				require.NoError(t, err)
 				require.NotNil(t, conf)
 
-				assert.Len(t, conf.Bots(), 1)
-				assert.Len(t, conf.Chats(), 1)
+				assert.Equal(t, 1, conf.Bots().Len())
+				assert.Equal(t, 1, conf.Chats().Len())
 
-				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
-				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
-
-				assertBot(t, conf, types.DefaultBotName, "bot2:test2")
-				assertChat(t, conf, types.DefaultChatName, "@testChat2")
+				assertBot(t, conf, "bot2", "bot2:test2")
+				assertChat(t, conf, "chat@testChat2", "@testChat2")
 
 				assert.NotNil(t, conf.GetSilenceSchedule())
 
@@ -92,11 +89,8 @@ func TestNewConfig(t *testing.T) {
 				require.NoError(t, err)
 				require.NotNil(t, conf)
 
-				assert.Len(t, conf.Bots(), 2)
-				assert.Len(t, conf.Chats(), 2)
-
-				assert.Equal(t, types.BotName("first_bot"), conf.GetDefaultBotName())
-				assert.Equal(t, types.ChatName("main_chat"), conf.GetDefaultChatName())
+				assert.Equal(t, 2, conf.Bots().Len())
+				assert.Equal(t, 2, conf.Chats().Len())
 
 				assertBot(t, conf, "first_bot", "bot12345:FIRST_BOT_TOKEN")
 				assertBot(t, conf, "second_bot", "bot54321:SECOND_BOT_TOKEN")
@@ -136,19 +130,16 @@ func TestNewConfig(t *testing.T) {
 				require.NoError(t, err)
 				require.NotNil(t, conf)
 
-				assert.Len(t, conf.Bots(), 3)
-				assert.Len(t, conf.Chats(), 3)
+				assert.Equal(t, 3, conf.Bots().Len())
+				assert.Equal(t, 3, conf.Chats().Len())
 
-				assert.Equal(t, types.DefaultBotName, conf.GetDefaultBotName())
-				assert.Equal(t, types.DefaultChatName, conf.GetDefaultChatName())
-
-				assertBot(t, conf, types.DefaultBotName, "bot3:test3")
+				assertBot(t, conf, "bot3", "bot3:test3")
 				assertBot(t, conf, "first_bot", "bot12345:FIRST_BOT_TOKEN")
 				assertBot(t, conf, "second_bot", "bot54321:SECOND_BOT_TOKEN")
 
 				assertChat(t, conf, "main_chat", "-12345")
 				assertChat(t, conf, "secondary_chat", "@my_test_channel")
-				assertChat(t, conf, types.DefaultChatName, "@testChat3")
+				assertChat(t, conf, "chat@testChat3", "@testChat3")
 			},
 		},
 		{
@@ -236,7 +227,7 @@ func TestNewConfig(t *testing.T) {
 				err  error
 			)
 
-			conf, err = config.NewConfig(config.FromFile(test.ConfigFile))
+			conf, err = config.New(config.FromFile(test.ConfigFile))
 
 			test.Assert(t, conf, err)
 		})
@@ -247,20 +238,20 @@ func TestConfig_BotChatGetters(t *testing.T) {
 	t.Setenv("TGNOTIFIER_DEFAULT_BOT", "bot123:test")
 	t.Setenv("TGNOTIFIER_DEFAULT_CHAT", "@testChat")
 
-	conf, err := config.NewConfig()
+	conf, err := config.New()
 
 	require.NoError(t, err)
-	require.NotNil(t, conf)
+	require.NotEmpty(t, conf)
 
 	t.Run("get unknown bot", func(t *testing.T) {
-		bot, err := conf.Bots().GetBot("unknown")
+		bot, err := conf.Bots().FindByName("unknown")
 
-		assert.Nil(t, bot)
+		assert.Empty(t, bot)
 		assert.Error(t, err)
 	})
 
 	t.Run("get unknown chat", func(t *testing.T) {
-		chat, err := conf.Chats().GetChatID("unknown")
+		chat, err := conf.Chats().FindByName("unknown")
 
 		assert.Empty(t, chat)
 		assert.Error(t, err)

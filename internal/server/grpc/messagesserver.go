@@ -15,7 +15,7 @@ import (
 )
 
 type Sender interface {
-	Send(ctx context.Context, options types.SendOptions) (*tgkit.TgMessage, error)
+	Send(ctx context.Context, options types.SendOptions) (tgkit.TgMessage, error)
 }
 
 func registerMessagesServer(grpcSrv *grpcpkg.Server, conf *config.Config, sender Sender) {
@@ -92,8 +92,6 @@ func (s *messagesServer) getSendOptions(req *grpc.SendMessageRequest) (types.Sen
 		DisableNotification: msg.GetDisableNotification(),
 		ProtectContent:      msg.GetProtectContent(),
 	}
-
-	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
 
 	if err := opt.Validate(); err != nil {
 		return types.SendOptions{}, err

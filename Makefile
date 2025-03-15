@@ -5,6 +5,7 @@ all:
 	$(MAKE) prepare
 	$(MAKE) validate
 	$(MAKE) build
+	$(MAKE) build_gui
 
 prepare:
 	go mod tidy
@@ -20,13 +21,16 @@ build:
 	go build $(build_arguments) ./cmd/tgnotifier
 
 build_without_gprc:
-	go build -tags no_grpc ./cmd/tgnotifier
+	go build -tags no_grpc $(build_arguments) ./cmd/tgnotifier
 
 build_without_http:
 	go build -tags no_http ./cmd/tgnotifier
 
 build_without_servers:
 	go build -tags no_http,no_grpc ./cmd/tgnotifier
+
+build_gui:
+	go build -tags gui,no_http,no_grpc ./cmd/tgnotifierui
 
 apis:
 	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/

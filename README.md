@@ -32,18 +32,18 @@ The gRPC and HTTP servers are also presented in the `tgnotifier` to have it runn
 ## Installation
 
 To install the latest release of the `tgnotifier`, 
-download the binary for your OS and unpack it somewhere inside the PATH.
+download the binary for your OS and put it somewhere inside the PATH.
 
-* Ubuntu/Debian: [tgnotifier_v0.7.2_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_ubuntu-latest)
-* macOS: [tgnotifier_v0.7.2_macOS-latest](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_macOS-latest)
-* Windows: [tgnotifier_v0.7.2_windows-latest.exe](https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_windows-latest.exe)
+* Ubuntu/Debian: [tgnotifier_v1.0.0_ubuntu-latest](https://github.com/kukymbr/tgnotifier/releases/download/v1.0.0/tgnotifier_v1.0.0_ubuntu-latest)
+* macOS: [tgnotifier_v1.0.0_macOS-latest](https://github.com/kukymbr/tgnotifier/releases/download/v1.0.0/tgnotifier_v1.0.0_macOS-latest)
+* Windows: [tgnotifier_v1.0.0_windows-latest.exe](https://github.com/kukymbr/tgnotifier/releases/download/v1.0.0/tgnotifier_v1.0.0_windows-latest.exe)
 
 Installation on Ubuntu/macOS example:
 
 ```shell
-wget https://github.com/kukymbr/tgnotifier/releases/download/v0.7.2/tgnotifier_v0.7.2_ubuntu-latest
-chmod a+x tgnotifier_v0.7.2_ubuntu-latest 
-mv tgnotifier_v0.7.2_ubuntu-latest /usr/local/bin/tgnotifier
+wget https://github.com/kukymbr/tgnotifier/releases/download/v1.0.0/tgnotifier_v1.0.0_ubuntu-latest
+chmod a+x tgnotifier_v1.0.0_ubuntu-latest 
+mv tgnotifier_v1.0.0_ubuntu-latest /usr/local/bin/tgnotifier
 tgnotifier --version
 ```
 
@@ -53,7 +53,7 @@ tgnotifier --version
 To install `tgnotifier` from the source, use the `go install` command:
 
 ```shell
-go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v0.7.2
+go install github.com/kukymbr/tgnotifier/cmd/tgnotifier@v1.0.0
 ```
 </details>
 
@@ -70,7 +70,7 @@ Available since v0.7.1.
 git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
 
 # Checkout tag you want to compile:
-git checkout v0.7.2
+git checkout v1.0.0
 
 # To build the tgnotifier with all components:
 make build
@@ -90,26 +90,26 @@ make build_without_servers
   <summary><b>Docker configuration</b></summary>
 
 Docker image: 
-[ghcr.io/kukymbr/tgnotifier:0.7.2](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/373703248?tag=0.7.2).
+[ghcr.io/kukymbr/tgnotifier:1.0.0](https://github.com/kukymbr/tgnotifier/pkgs/container/tgnotifier/373703248?tag=1.0.0).
 
 #### Docker usage examples
 
 Sending message without a configuration file:
 
 ```shell
-docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:0.7.2 send --text="what's up?"
+docker run --env TGNOTIFIER_DEFAULT_BOT=bot12345:bot_token --env TGNOTIFIER_DEFAULT_CHAT=-12345 --rm ghcr.io/kukymbr/tgnotifier:1.0.0 send --text="what's up?"
 ```
 
 Sending message with a configuration file:
 
 ```shell
-docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.2 send --text="what's up?"
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:1.0.0 send --text="what's up?"
 ```
 
 Starting a gRPC server:
 
 ```shell
-docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:0.7.2 grpc
+docker run --volume /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml --rm ghcr.io/kukymbr/tgnotifier:1.0.0 grpc
 ```
 
 Using as a docker compose service:
@@ -117,7 +117,7 @@ Using as a docker compose service:
 ```yaml
 services:
   tgnotifier:
-    image: ghcr.io/kukymbr/tgnotifier:0.7.2
+    image: ghcr.io/kukymbr/tgnotifier:1.0.0
     volumes:
       - /path/to/.tgnotifier.yml:/tgnotifier/.tgnotifier.yml
     ports:
@@ -333,6 +333,13 @@ Flags:
 ```
 
 See the [openapi.yaml](api/http/openapi.yaml) for an API contract.
+
+## GUI
+
+If you want to test or visualize `tgnotifier` possibilities or to send couple messages via the UI, 
+run the `tgnotifierui` app.
+
+See the [GUI readme](cmd/tgnotifierui/readme.md) for more info.
 
 ## `tgkit` library
 

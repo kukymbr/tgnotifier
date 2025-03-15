@@ -51,7 +51,7 @@ type MessageOptions struct {
 }
 
 func (m MessageOptions) Validate() error {
-	if m.Text == "" {
+	if strings.TrimSpace(m.Text) == "" {
 		return fmt.Errorf("no message text given")
 	}
 

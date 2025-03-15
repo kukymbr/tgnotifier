@@ -77,7 +77,7 @@ func (s *messagesService) Send(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.responseOk(w, *tgResp)
+	s.responseOk(w, tgResp)
 }
 
 func (s *messagesService) parseRequest(r *http.Request) (types.SendOptions, error) {
@@ -121,8 +121,6 @@ func (s *messagesService) parseRequest(r *http.Request) (types.SendOptions, erro
 	if err := opt.Message.ParseMode.Set(getValue(req.Message.ParseMode)); err != nil {
 		return types.SendOptions{}, err
 	}
-
-	opt = opt.GetNormalized(s.conf.GetDefaultBotName(), s.conf.GetDefaultChatName())
 
 	if err := opt.Validate(); err != nil {
 		return types.SendOptions{}, err

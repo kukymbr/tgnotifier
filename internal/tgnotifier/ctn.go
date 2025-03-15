@@ -10,8 +10,7 @@ import (
 
 // NewDefaultDependencyContainer builds new default DependencyContainer.
 func NewDefaultDependencyContainer(configFilePath string) (DependencyContainer, error) {
-	conf, err := config.NewConfig(config.FromDefaultFileDiscovery(configFilePath))
-
+	conf, err := config.New(config.FromDefaultFileDiscovery(configFilePath))
 	if err != nil {
 		return DependencyContainer{}, err
 	}

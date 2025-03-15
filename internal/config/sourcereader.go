@@ -29,6 +29,10 @@ func FromDefaultFileDiscovery(configFilePath string) SourceReaderFactory {
 		return FromFile(configFilePath)
 	}
 
+	if path := os.Getenv(EnvConfigPath); path != "" {
+		return FromFile(path)
+	}
+
 	paths := make([]string, 0, 3)
 
 	dirGetters := []func() (string, error){

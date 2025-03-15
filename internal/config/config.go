@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	EnvDefaultBot  = "TGNOTIFIER_DEFAULT_BOT"
-	EnvDefaultChat = "TGNOTIFIER_DEFAULT_CHAT"
+	EnvPrefix      = "TGNOTIFIER_"
+	EnvConfigPath  = EnvPrefix + "CONFIG_PATH"
+	EnvDefaultBot  = EnvPrefix + "DEFAULT_BOT"
+	EnvDefaultChat = EnvPrefix + "DEFAULT_CHAT"
 )
 
 // Config is a tgnotifier configuration.

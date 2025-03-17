@@ -146,6 +146,11 @@ Use one of these ways to define a `tgnotifier` configuration:
   ```shell
   tgnotifier --config="/path/to/config.yml" --text="🎉"
   ```
+* Or create a configuration file and set its path to the `TGNOTIFIER_CONFIG_PATH` environment variable:
+   ```shell
+  export TGNOTIFIER_CONFIG_PATH=/path/to/config.yml 
+  tgnotifier --text="⭐"
+  ```
 * Or use a minimal configuration mode (just single bot and chat) using the environment variables:
   ```shell
   export TGNOTIFIER_DEFAULT_BOT="bot12345:bot-token"

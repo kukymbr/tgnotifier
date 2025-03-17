@@ -240,9 +240,11 @@ export TGNOTIFIER_DEFAULT_CHAT="-12345"
 1. See the [Telegram Bot API tutorial](https://core.telegram.org/bots/tutorial#obtain-your-bot-token) 
 to find out how to obtain a bot token.
 2. Getting the chat ID is little more tricky, you need to add bot to a required chat, send there a message
-   and request the `getUpdates` Telegram API endpoint, 
-   see [this doc](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a#get-chat-id-for-a-private-chat)
-   for an example.
+   and request the `getUpdates` Telegram API endpoint:
+   * use `curl` or browser to request this data, 
+     see [this doc](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a#get-chat-id-for-a-private-chat)
+     for an example;
+   * or use `tgnotifierui` GUI, see its doc for more info: [docs/gui.md](docs/gui.md#getting-the-chat-id). 
 </details>
 
 ## CLI tool usage

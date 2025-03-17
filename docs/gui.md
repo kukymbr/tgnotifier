@@ -53,6 +53,6 @@ The Telegram chat ID may be obtained using the `tgnotigierui`:
 2. add bot to the required chat;
 3. send to the chat `/start @botName` message, where `botName` is name identifier of your bot;
 4. open the `tgnotigierui`, select your bot in the dropdown and click the `Get updates...` button;
-5. find in the response textarea the chat ID field `0.message.chat.id`:
+5. find in the response textarea the chat ID value in field `0.message.chat.id`:
 
 <img src="gui_chat-id.png" width="600"> 

@@ -48,8 +48,11 @@ func TestNewConfig(t *testing.T) {
 				"TGNOTIFIER_DEFAULT_BOT": "bot1:test1",
 			},
 			Assert: func(t *testing.T, conf *config.Config, err error) {
-				assert.Error(t, err)
-				assert.Nil(t, conf)
+				require.NoError(t, err)
+				require.NotNil(t, conf)
+
+				assert.Equal(t, 1, conf.Bots().Len())
+				assert.Equal(t, 0, conf.Chats().Len())
 			},
 		},
 		{
@@ -177,14 +180,6 @@ func TestNewConfig(t *testing.T) {
 		{
 			Name:       "With invalid file (empty)",
 			ConfigFile: "./testdata/.tgnotifier.invalid.empty.yml",
-			Assert: func(t *testing.T, conf *config.Config, err error) {
-				assert.Error(t, err)
-				assert.Nil(t, conf)
-			},
-		},
-		{
-			Name:       "With invalid file (no chats)",
-			ConfigFile: "./testdata/.tgnotifier.invalid.nochats.yml",
 			Assert: func(t *testing.T, conf *config.Config, err error) {
 				assert.Error(t, err)
 				assert.Nil(t, conf)

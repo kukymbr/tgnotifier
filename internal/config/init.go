@@ -81,10 +81,6 @@ func readConfigFromReader(conf *Config, inp io.Reader) error {
 		return fmt.Errorf("invalid config: no bots given")
 	}
 
-	if len(raw.Chats) == 0 {
-		return fmt.Errorf("invalid config: no chats given")
-	}
-
 	for botName, identity := range raw.Bots {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
@@ -140,10 +136,6 @@ func setupConfigValues(conf *Config) error {
 
 	if conf.Bots().Len() == 0 {
 		return fmt.Errorf("no bots registered in config file or env")
-	}
-
-	if conf.Chats().Len() == 0 {
-		return fmt.Errorf("no chats registered in config file or env")
 	}
 
 	setServerDefaults(&conf.grpc, defaultGRPCHost, defaultGRPCPort)

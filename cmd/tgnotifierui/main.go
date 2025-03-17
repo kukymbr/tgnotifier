@@ -3,6 +3,7 @@
 package main
 
 import (
+	"github.com/kukymbr/tgnotifier/internal/buildinfo"
 	"github.com/kukymbr/tgnotifier/internal/gui"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
 	flag "github.com/spf13/pflag"
@@ -10,10 +11,19 @@ import (
 	"os"
 )
 
-var genericOptions = tgnotifier.GenericOptions{}
+var (
+	genericOptions = tgnotifier.GenericOptions{}
+	isVersion      = false
+)
 
 func main() {
 	initGenericFlags(os.Args)
+
+	if isVersion {
+		buildinfo.PrintVersion()
+
+		os.Exit(0)
+	}
 
 	genericOptions.Normalize()
 
@@ -31,6 +41,8 @@ func initGenericFlags(args []string) {
 	flags := flag.NewFlagSet("", flag.ExitOnError)
 
 	flags.SetOutput(os.Stderr)
+
+	flags.BoolVar(&isVersion, "version", false, "Show tgnotifier version")
 
 	flags.StringVar(
 		&genericOptions.ConfigPath,

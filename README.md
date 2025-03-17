@@ -339,7 +339,7 @@ See the [openapi.yaml](api/http/openapi.yaml) for an API contract.
 If you want to test or visualize `tgnotifier` possibilities or to send couple messages via the UI, 
 run the `tgnotifierui` app.
 
-See the [GUI readme](cmd/tgnotifierui/readme.md) for more info.
+See the [GUI readme](docs/gui) for more info.
 
 ## `tgkit` library
 
@@ -348,7 +348,6 @@ See its doc for more info: [pkg/tgkit/readme.md](pkg/tgkit/readme.md).
 
 ## TODO
 
-- [ ] `tgkit`: support all the Telegram response fields. 
 - [ ] Predefined messages with templates and i18n. 
 - [x] HTTP server.
 - [x] Optional user's config file in the home dir.

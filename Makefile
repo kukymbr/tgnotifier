@@ -1,5 +1,5 @@
 GOLANGCI_LINT_VERSION := 1.64.6
-CURRENT_TAG := $(shell git describe --exact-match --tags)
+LATEST_TAG := $(shell git describe --tags --abbrev=0)
 MACOS_VERSION := $(shell sw_vers -productVersion)
 MACOS_ARCH := $(shell uname -m)
 
@@ -36,9 +36,8 @@ build_gui:
 	go build -tags gui,no_http,no_grpc $(build_arguments) ./cmd/tgnotifierui
 
 build_gui_local:
-	git describe --exact-match --tags
 	@echo Building $(CURRENT_TAG)...
-	go build -tags gui,no_http,no_grpc -o ./tgnotifierui_$(CURRENT_TAG)_macOS-v$(MACOS_VERSION)_$(MACOS_ARCH) ./cmd/tgnotifierui
+	go build -tags gui,no_http,no_grpc -o ./tgnotifierui_$(LATEST_TAG)_macOS-v$(MACOS_VERSION)_$(MACOS_ARCH) ./cmd/tgnotifierui
 
 apis:
 	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/

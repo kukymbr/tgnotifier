@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/kukymbr/tgnotifier/internal/buildinfo"
 	"os"
 	"os/signal"
@@ -83,9 +82,7 @@ func getVersionCommandDefinition() *cobra.Command {
 		Short: "tgnotifier version info",
 		Long:  "Prints the tgnotifier version info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("tgnotifier version: %s\n\n", tgnotifier.Version)
-			fmt.Printf("With gRPC server: %t\n", buildinfo.WithGRPCServer())
-			fmt.Printf("With HTTP server: %t\n", buildinfo.WithHTTPServer())
+			buildinfo.PrintVersion()
 		},
 	}
 }

@@ -27,7 +27,6 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
         executable: [ tgnotifier ]
-        # executable: [ tgnotifier, tgnotifierui ]
     runs-on: ${{ matrix.os }}
     env:
       ARTIFACT_NAME: ${{ matrix.executable }}_${{ github.ref_name }}_${{ matrix.os }}

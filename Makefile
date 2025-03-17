@@ -1,4 +1,7 @@
 GOLANGCI_LINT_VERSION := 1.64.6
+CURRENT_TAG := $(shell git describe --exact-match --tags)
+MACOS_VERSION := $(shell sw_vers -productVersion)
+MACOS_ARCH := $(shell uname -m)
 
 all:
 	$(MAKE) clean
@@ -24,13 +27,18 @@ build_without_gprc:
 	go build -tags no_grpc $(build_arguments) ./cmd/tgnotifier
 
 build_without_http:
-	go build -tags no_http ./cmd/tgnotifier
+	go build -tags no_http $(build_arguments) ./cmd/tgnotifier
 
 build_without_servers:
-	go build -tags no_http,no_grpc ./cmd/tgnotifier
+	go build -tags no_http,no_grpc $(build_arguments) ./cmd/tgnotifier
 
 build_gui:
-	go build -tags gui,no_http,no_grpc ./cmd/tgnotifierui
+	go build -tags gui,no_http,no_grpc $(build_arguments) ./cmd/tgnotifierui
+
+build_gui_local:
+	git describe --exact-match --tags
+	@echo Building $(CURRENT_TAG)...
+	go build -tags gui,no_http,no_grpc -o ./tgnotifierui_$(CURRENT_TAG)_macOS-v$(MACOS_VERSION)_$(MACOS_ARCH) ./cmd/tgnotifierui
 
 apis:
 	protoc -I api/grpc api/grpc/tgnotifier.proto --go_out=./internal/api/grpc/ --go_opt=paths=source_relative --go-grpc_out=./internal/api/grpc/ --go-grpc_opt=paths=source_relative --oas_out=./api/http/

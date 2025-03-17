@@ -30,4 +30,6 @@ type TgMessage struct {
 	Date      uint64 `json:"date"`
 
 	MessageThreadId int `json:"message_thread_id,omitempty"`
+
+	Chat TgChat `json:"chat"`
 }

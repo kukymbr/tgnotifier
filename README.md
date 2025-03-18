@@ -351,7 +351,7 @@ See the [GUI readme](docs/gui) for more info.
 ## `tgkit` library
 
 Yes, there also a library to communicate with a Telegram API.
-See its doc for more info: [pkg/tgkit/readme.md](pkg/tgkit/readme.md).
+See its doc for more info: [docs/tgkit.md](docs/tgkit.md).
 
 ## TODO
 

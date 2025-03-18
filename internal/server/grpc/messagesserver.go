@@ -63,6 +63,14 @@ func (s *messagesServer) Send(ctx context.Context, req *grpc.SendMessageRequest)
 				SupportsInlineQueries:   tgResp.From.SupportsInlineQueries,
 				CanConnectToBusiness:    tgResp.From.CanConnectToBusiness,
 			},
+			Chat: &grpc.TgChat{
+				Id:        tgResp.Chat.ID,
+				Type:      tgResp.Chat.Type,
+				Title:     tgResp.Chat.Title,
+				FirstName: tgResp.Chat.FirstName,
+				LastName:  tgResp.Chat.LastName,
+				IsForum:   tgResp.Chat.IsForum,
+			},
 		},
 	}, nil
 }

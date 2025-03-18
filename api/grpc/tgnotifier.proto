@@ -56,9 +56,13 @@ message TgMessage {
   int64 message_id = 1 [json_name = "message_id"];
   uint64 date = 2;
   int64 message_thread_id = 3 [json_name = "message_thread_id"];
+
   TgUser from = 4;
+  TgChat chat = 5;
 }
 
+// TgUser is a model of the Telegram User.
+// See https://core.telegram.org/bots/api#user
 message TgUser {
   int64 id = 1;
 
@@ -75,4 +79,30 @@ message TgUser {
   bool can_read_all_group_messages = 10 [json_name = "can_read_all_group_messages"];
   bool supports_inline_queries = 11 [json_name = "supports_inline_queries"];
   bool can_connect_to_business = 12 [json_name = "can_connect_to_business"];
+}
+
+// TgChat is a model representing the Telegram API chat object.
+// See: https://core.telegram.org/bots/api#chat
+message TgChat {
+  // Unique identifier for this chat.
+  // This number may have more than 32 significant bits and some programming languages
+  // may have difficulty/silent defects in interpreting it.
+  // But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type
+  // are safe for storing this identifier.
+  int64 id = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // Type of the chat, can be either “private”, “group”, “supergroup” or “channel”.
+  string type = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional. Title, for supergroups, channels and group chats.
+  string title = 3;
+
+  // Optional. First name of the other party in a private chat.
+  string first_name = 4 [json_name = "first_name"];
+
+  // Optional. Last name of the other party in a private chat.
+  string last_name = 5 [json_name = "last_name"];
+
+  // Optional. True, if the supergroup chat is a forum (has topics enabled).
+  bool is_forum = 6 [json_name = "is_forum"];
 }

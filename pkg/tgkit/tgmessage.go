@@ -25,11 +25,10 @@ type TgMessageResponse struct {
 // See https://core.telegram.org/bots/api#message
 // TODO: add a lot of fields :)
 type TgMessage struct {
-	MessageID int    `json:"message_id"`
-	From      TgUser `json:"from"`
-	Date      uint64 `json:"date"`
+	MessageID       int    `json:"message_id"`
+	MessageThreadId int    `json:"message_thread_id,omitempty"`
+	Date            uint64 `json:"date"`
 
-	MessageThreadId int `json:"message_thread_id,omitempty"`
-
+	From TgUser `json:"from"`
 	Chat TgChat `json:"chat"`
 }

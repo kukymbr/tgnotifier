@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 	"net"
@@ -78,32 +77,6 @@ func (c *Config) HTTP() ServerConfig {
 // GetRequestRetrier returns tgkit.RequestRetrier instance.
 func (c *Config) GetRequestRetrier() tgkit.RequestRetrier {
 	return c.retrier
-}
-
-// BotsIndex is an index of the registered bots.
-type BotsIndex map[types.BotName]*tgkit.Bot
-
-// GetBot finds registered bot by the name.
-func (b BotsIndex) GetBot(name types.BotName) (*tgkit.Bot, error) {
-	bot, ok := b[name]
-	if !ok {
-		return nil, fmt.Errorf("bot %s is not registered", name)
-	}
-
-	return bot, nil
-}
-
-// ChatsIndex is an index of the registered chats.
-type ChatsIndex map[types.ChatName]tgkit.ChatID
-
-// GetChatID finds registered chat ID by the name.
-func (b ChatsIndex) GetChatID(name types.ChatName) (tgkit.ChatID, error) {
-	chatID, ok := b[name]
-	if !ok {
-		return "", fmt.Errorf("chat %s is not registered", name)
-	}
-
-	return chatID, nil
 }
 
 type ServerConfig struct {

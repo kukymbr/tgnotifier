@@ -46,4 +46,4 @@ func SendCoolMessage() error {
 }
 ```
 
-See the godoc for the reference: [pkg.go.dev](https://pkg.go.dev/github.com/kukymbr/tgnotifier@v1.0.0/pkg/tgkit)
+See the godoc for the reference: [pkg.go.dev](https://pkg.go.dev/github.com/kukymbr/tgnotifier@v1.0.1/pkg/tgkit)

@@ -7,13 +7,13 @@ The `tgnotifierui` app is a GUI wrapper for a `tgnotifier`.
 ## Installation
 
 For now, the GUI binary is available only for a macOS on the Apple chip:
-[tgnotifierui_v1.0.0-beta2_macOS-v15.3.1_arm64](https://github.com/kukymbr/tgnotifier/releases/download/v1.0.0/tgnotifierui_v1.0.0_macOS-v15.3.1_arm64)
+[tgnotifierui_v1.0.1_macOS-v15.3.1_arm64](https://github.com/kukymbr/tgnotifier/releases/download/v1.0.1/tgnotifierui_v1.0.1_macOS-v15.3.1_arm64)
 
 For other platforms it's possible to build GUI from the sources:
 
 ```shell
 git clone https://github.com/kukymbr/tgnotifier.git && cd tgnotifier
-git checkout v1.0.0
+git checkout v1.0.1
 make build_gui
 ./tgnotifierui --version
 ```

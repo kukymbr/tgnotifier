@@ -205,3 +205,66 @@ func TestClient_SendMessage(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetUpdates(t *testing.T) {
+	httpClient := &tgkit.HTTPClientJSONMock{}
+	httpClient.RegisterResponse(
+		http.MethodGet,
+		"https://api.telegram.org/bot1:test1/getUpdates",
+		http.StatusOK,
+		&tgkit.TgUpdatesResponse{
+			Ok: true,
+			Result: []tgkit.TgUpdate{
+				{
+					UpdateID: 1,
+					Message: tgkit.TgMessage{
+						MessageID: 1,
+					},
+				},
+			},
+		},
+	)
+	httpClient.RegisterResponse(
+		http.MethodGet,
+		"https://api.telegram.org/bot2:test2/getUpdates",
+		http.StatusOK,
+		`{"ok":true, "result": []}`,
+	)
+
+	tests := []struct {
+		BotIdentity string
+		Assert      func(t *testing.T, updates []tgkit.TgUpdate, err error)
+	}{
+		{
+			BotIdentity: "1:test1",
+			Assert: func(t *testing.T, updates []tgkit.TgUpdate, err error) {
+				require.NoError(t, err)
+				require.Len(t, updates, 1)
+
+				assert.Equal(t, updates[0].UpdateID, 1)
+			},
+		},
+		{
+			BotIdentity: "2:test2",
+			Assert: func(t *testing.T, updates []tgkit.TgUpdate, err error) {
+				require.NoError(t, err)
+
+				assert.NotNil(t, updates)
+				assert.Len(t, updates, 0)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.BotIdentity, func(t *testing.T) {
+			client := tgkit.NewClientWithOptions(tgkit.WithHTTPClient(httpClient))
+			bot, err := tgkit.NewBot(test.BotIdentity)
+
+			require.NoError(t, err)
+
+			updates, err := client.GetUpdates(bot)
+
+			test.Assert(t, updates, err)
+		})
+	}
+}

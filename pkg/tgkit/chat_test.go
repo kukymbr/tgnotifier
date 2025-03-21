@@ -16,6 +16,7 @@ func TestChatID_String(t *testing.T) {
 		{Input: "-123", Expected: "-123"},
 		{Input: "test1", Expected: "@test1"},
 		{Input: "@test2", Expected: "@test2"},
+		{Input: "", Expected: ""},
 	}
 
 	for _, test := range tests {

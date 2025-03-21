@@ -42,6 +42,10 @@ func TestNewBot_WhenValid_ExpectNoError(t *testing.T) {
 			assert.Equal(t, test.ExpectedToken, bot.GetToken())
 			assert.Equal(t, test.ExpectedIdentity, bot.GetIdentity())
 			assert.Equal(t, test.ExpectedString, bot.String())
+
+			assert.NotPanics(t, func() {
+				tgkit.MustNewBot(test.Identity)
+			})
 		})
 	}
 }

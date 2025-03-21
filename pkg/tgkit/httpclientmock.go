@@ -24,6 +24,8 @@ func (m *HTTPClientJSONMock) RegisterResponse(method string, url string, respons
 	switch r := responseBody.(type) {
 	case []byte:
 		body = r
+	case string:
+		body = []byte(r)
 	case nil:
 	default:
 		body, err = jsoniter.Marshal(responseBody)

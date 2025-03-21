@@ -3,6 +3,8 @@ package tgkit
 import "fmt"
 
 // TgErrorResponse is a Telegram response describing the error.
+//
+//nolint:errname
 type TgErrorResponse struct {
 	Ok          bool   `json:"ok"`
 	ErrorCode   int    `json:"error_code,omitempty"`

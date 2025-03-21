@@ -6,6 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"sync"
+	"time"
+
 	jsoniter "github.com/json-iterator/go"
 	httpstubs "github.com/kukymbr/tgnotifier/internal/api/http"
 	"github.com/kukymbr/tgnotifier/internal/config"
@@ -13,10 +18,9 @@ import (
 	"github.com/kukymbr/tgnotifier/internal/types"
 	"github.com/kukymbr/tgnotifier/internal/util"
 	"github.com/kukymbr/tgnotifier/pkg/tgkit"
-	"io"
-	"net/http"
-	"sync"
 )
+
+const readHeaderTimeout = 30 * time.Second
 
 // RunServer runs an HTTP server.
 func RunServer(ctx context.Context, conf *config.Config, sender *sender.Sender) error {
@@ -26,8 +30,9 @@ func RunServer(ctx context.Context, conf *config.Config, sender *sender.Sender) 
 	})
 
 	server := &http.Server{
-		Addr:    conf.HTTP().GetAddress(),
-		Handler: handler,
+		Addr:              conf.HTTP().GetAddress(),
+		Handler:           handler,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	go func() {

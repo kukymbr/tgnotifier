@@ -2,12 +2,13 @@ package config
 
 import (
 	"fmt"
-	"github.com/kukymbr/tgnotifier/internal/types"
-	"github.com/kukymbr/tgnotifier/pkg/tgkit"
-	"gopkg.in/yaml.v3"
 	"io"
 	"os"
 	"time"
+
+	"github.com/kukymbr/tgnotifier/internal/types"
+	"github.com/kukymbr/tgnotifier/pkg/tgkit"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -71,17 +72,19 @@ func readConfigFromReader(conf *Config, inp io.Reader) error {
 		return fmt.Errorf("read config data from reader: %w", err)
 	}
 
-	var raw *configDTO
+	var dto configDTO
 
-	if err := yaml.Unmarshal(data, &raw); err != nil {
+	if err := yaml.Unmarshal(data, &dto); err != nil {
 		return fmt.Errorf("decode config data: %w", err)
 	}
 
-	if raw == nil || len(raw.Bots) == 0 {
-		return fmt.Errorf("invalid config: no bots given")
-	}
+	return setValuesFromDTO(conf, dto)
+}
 
-	for botName, identity := range raw.Bots {
+func setValuesFromDTO(conf *Config, dto configDTO) error {
+	var err error
+
+	for botName, identity := range dto.Bots {
 		bot, err := tgkit.NewBot(identity)
 		if err != nil {
 			return fmt.Errorf("read bot from config: %w", err)
@@ -90,7 +93,7 @@ func readConfigFromReader(conf *Config, inp io.Reader) error {
 		conf.Bots().Add(botName, bot)
 	}
 
-	for chatName, chatIDStr := range raw.Chats {
+	for chatName, chatIDStr := range dto.Chats {
 		chatID := tgkit.ChatID(chatIDStr)
 		if chatID == "" {
 			return fmt.Errorf("empty chat ID for %s in config", chatName)
@@ -99,31 +102,31 @@ func readConfigFromReader(conf *Config, inp io.Reader) error {
 		conf.chats.Add(chatName, chatID)
 	}
 
-	conf.Bots().SetDefaultName(raw.DefaultBot)
-	conf.Chats().SetDefaultName(raw.DefaultChat)
+	conf.Bots().SetDefaultName(dto.DefaultBot)
+	conf.Chats().SetDefaultName(dto.DefaultChat)
 
-	conf.silenceSchedule, err = parseTimeSchedule(raw.SilenceSchedule)
+	conf.silenceSchedule, err = parseTimeSchedule(dto.SilenceSchedule)
 	if err != nil {
 		return fmt.Errorf("parse silence schedule from config: %w", err)
 	}
 
-	conf.retrier, err = newRetrier(raw.Retrier)
+	conf.retrier, err = newRetrier(dto.Retrier)
 	if err != nil {
 		return fmt.Errorf("failed to initialize request retrier from config: %w", err)
 	}
 
 	conf.client = ClientConfig{
-		timeout: raw.Client.Timeout,
+		timeout: dto.Client.Timeout,
 	}
 
-	conf.replaces = raw.Replaces
+	conf.replaces = dto.Replaces
 	conf.grpc = ServerConfig{
-		host: raw.GRPC.Host,
-		port: raw.GRPC.Port,
+		host: dto.GRPC.Host,
+		port: dto.GRPC.Port,
 	}
 	conf.http = ServerConfig{
-		host: raw.HTTP.Host,
-		port: raw.HTTP.Port,
+		host: dto.HTTP.Host,
+		port: dto.HTTP.Port,
 	}
 
 	return nil

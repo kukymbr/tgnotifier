@@ -66,6 +66,10 @@ func (c *Client) Get(bot Bot, method string, target any) error {
 		return fmt.Errorf("send GET %s: %w", urlDebug, err)
 	}
 
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
 	errResp, err := parseResponse(resp, target)
 	if err != nil {
 		return fmt.Errorf("parse response from GET %s: %w", urlDebug, err)
@@ -94,6 +98,10 @@ func (c *Client) Post(bot Bot, method string, reqData any, target any) error {
 	if err != nil {
 		return fmt.Errorf("send POST %s: %w", urlDebug, err)
 	}
+
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	errResp, err := parseResponse(resp, target)
 	if err != nil {

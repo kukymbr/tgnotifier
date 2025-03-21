@@ -25,6 +25,7 @@ func (n *BotName) Set(val string) error {
 	return nil
 }
 
+//nolint:goconst
 func (n *BotName) Type() string {
 	return "string"
 }

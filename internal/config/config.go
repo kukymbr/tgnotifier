@@ -1,11 +1,12 @@
 package config
 
 import (
-	"github.com/kukymbr/tgnotifier/internal/types"
-	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 	"net"
 	"strconv"
 	"time"
+
+	"github.com/kukymbr/tgnotifier/internal/types"
+	"github.com/kukymbr/tgnotifier/pkg/tgkit"
 )
 
 const (

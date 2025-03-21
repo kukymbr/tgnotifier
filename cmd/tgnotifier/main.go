@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/kukymbr/tgnotifier/internal/buildinfo"
 	"os"
 	"os/signal"
+
+	"github.com/kukymbr/tgnotifier/internal/buildinfo"
 
 	"github.com/kukymbr/tgnotifier/internal/config"
 	"github.com/kukymbr/tgnotifier/internal/tgnotifier"
@@ -112,6 +113,7 @@ func initSendFlags(cmd *cobra.Command) {
 		"",
 		"Message text",
 	)
+
 	_ = cmd.MarkFlagRequired("text")
 
 	cmd.Flags().Var(

@@ -356,6 +356,7 @@ See its doc for more info: [docs/tgkit.md](docs/tgkit.md).
 ## TODO
 
 - [ ] Predefined messages with templates and i18n. 
+- [ ] `tgkit`: generate models from Telegram's swagger file.
 - [x] HTTP server.
 - [x] Optional user's config file in the home dir.
 - [x] gRPC server.

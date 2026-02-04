@@ -142,7 +142,7 @@ Use one of these ways to define a `tgnotifier` configuration:
   nano "$HOME/.config/.tgnotifier.yml" # Define a config values...
   tgnotifer --text="🤠" 
   ```
-* Or create an YAML of JSON file in any location you want and give its path to the `tgnotifier`:
+* Or create an YAML or JSON file in any location you want and give its path to the `tgnotifier`:
   ```shell
   tgnotifier --config="/path/to/config.yml" --text="🎉"
   ```
